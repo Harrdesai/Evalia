@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-
 const app = express();
 
 app.use(
@@ -24,21 +23,27 @@ app.get('/', (req, res) => {
 app.use((err, req, res, next) => {
   if (err instanceof ApiError) {
     // If it's an ApiError, return a structured error response
+    console.log(`${err.statusCode} : status code`);
     return res.status(err.statusCode).json({
       message: err.message,
       details: err.errors || []
+      
     });
   }
 
   // Default error handler for other errors
   console.error(err);
-  return res.status(500).json({ message: 'Internal Server Error' });
+  return res.status(500).json({
+    message: "Internal Server Error",
+    details: []
+  });
 });
 
 
 // router imports
 import healthCheckRouter from './routes/healthcheck.routes.js';
 import authRouter from './routes/auth.routes.js';
+import { ApiError } from "./utils/api-error.js";
 
 app.use("/api/v1/healthcheck", healthCheckRouter)
 app.use("/api/v1/auth", authRouter)

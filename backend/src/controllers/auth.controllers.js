@@ -10,14 +10,15 @@ const prisma = new PrismaClient();
 
 
 const registerUser = async (request, response) => {
+
+  try {
+    
   const { name, email, password, role } = request.body
 
-  console.log(request.body)
   if (!name || !email || !password || !role) {
     throw new ApiError(400, "All fields are required")
   }
 
-  try {
     const existingUser = await prisma.user.findUnique({
       where: {
         email
@@ -51,7 +52,7 @@ const registerUser = async (request, response) => {
     })
 
     response.status(201).json(
-      new ApiResponse(201, "User created successfully", {
+      new ApiResponse(201, {
         user: {
           id: newUser.id,
           name: newUser.name,
@@ -61,29 +62,29 @@ const registerUser = async (request, response) => {
           createdAt: newUser.createdAt,
           updatedAt: newUser.updatedAt
         }
-      })
+      }, "User created successfully")
     )
   } catch (error) {
 
     console.error("Error registering user:", error);
-    response.status(500).json(
-      new ApiResponse(500, "Error registering user", {
+    response.status(error.statusCode).json(
+      new ApiResponse(error.statusCode, {
         error: error.message
-      })
+      }, "Error registering user")
     )
     
   }
 }
 
 const loginUser = async (request, response) => {
-  console.log(request.body)
-  const { email, password } = request.body;
-
-  if (!email || !password) {
-    throw new ApiError(400, "All fields are required");
-  }
 
   try {
+    const { email, password } = request.body;
+  
+    if (!email || !password) {
+      throw new ApiError(400, "All fields are required");
+    }
+
     const findUser = await prisma.user.findUnique({
       where: {
         email
@@ -112,7 +113,7 @@ const loginUser = async (request, response) => {
     });
 
     response.status(200).json(
-      new ApiResponse(200, "User logged in successfully", {
+      new ApiResponse(200, {
         user: {
           id: findUser.id,
           name: findUser.name,
@@ -122,27 +123,63 @@ const loginUser = async (request, response) => {
           createdAt: findUser.createdAt,
           updatedAt: findUser.updatedAt
         }
-      })
+      }, "User logged in successfully")
     )
 
   } catch (error) {
 
     console.error("Error logging in user:", error);
-    response.status(500).json(
-      new ApiResponse(500, "Error logging in user", {
+    response.status(error.statusCode).json(
+      new ApiResponse(error.statusCode, {
         error: error.message
-      })
+      }, "Error logging in user")
     )
     
   }
 };
 
 const logoutUser = async (request, response) => {
-  
+
+  try {
+
+    response.clearCookie("jwt", {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development"
+    });
+
+    response.status(200).json(new ApiResponse(200, "User logged out successfully"));
+
+  } catch (error) {
+    
+    console.error("Error logging out user:", error);
+    response.status(error.statusCode).json(
+      new ApiResponse(error.statusCode, {
+        error: error.message
+      }, "Error logging out user")
+    )
+  }
 }
 
 const getMe = async (request, response) => {
-  
+
+  try {
+
+    response.status(200).json(
+      new ApiResponse(200, {
+        user: request.user
+      }, "User data fetched successfully")
+    )
+
+  } catch (error) {
+    
+    console.error("Error fetching user:", error);
+    response.status(error.statusCode).json(
+      new ApiResponse(error.statusCode, {
+        error: error.message
+      }, "Error fetching user")
+    )
+  }
 }
 
 export {
