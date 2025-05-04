@@ -169,7 +169,7 @@ const config = {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://postgres:Evalia@127.0.0.1:5432/postgres?schema=public"
+        "value": "postgresql://postgres:Evalia@127.0.0.1:5432/postgres"
       }
     }
   },
