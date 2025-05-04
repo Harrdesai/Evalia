@@ -76,8 +76,66 @@ const registerUser = async (request, response) => {
 }
 
 const loginUser = async (request, response) => {
+  console.log(request.body)
+  const { email, password } = request.body;
+
+  if (!email || !password) {
+    throw new ApiError(400, "All fields are required");
+  }
+
+  try {
+    const findUser = await prisma.user.findUnique({
+      where: {
+        email
+      }
+    });
   
-}
+    if (!findUser) {
+      throw new ApiError(404, "User not found");
+    }
+  
+    const isPasswordValid = await bcrypt.compare(password, findUser.password);
+  
+    if (!isPasswordValid) {
+      throw new ApiError(401, "Invalid credentials");
+    }
+  
+    const token = jwt.sign({ id: findUser.id }, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN
+    });
+  
+    response.cookie("jwt", token, {
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development",
+      maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
+
+    response.status(200).json(
+      new ApiResponse(200, "User logged in successfully", {
+        user: {
+          id: findUser.id,
+          name: findUser.name,
+          email: findUser.email,
+          role: findUser.role,
+          image: findUser.image,
+          createdAt: findUser.createdAt,
+          updatedAt: findUser.updatedAt
+        }
+      })
+    )
+
+  } catch (error) {
+
+    console.error("Error logging in user:", error);
+    response.status(500).json(
+      new ApiResponse(500, "Error logging in user", {
+        error: error.message
+      })
+    )
+    
+  }
+};
 
 const logoutUser = async (request, response) => {
   
