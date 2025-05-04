@@ -1,7 +1,8 @@
 import express from 'express';
 import { registerUser, loginUser, logoutUser, getMe } from '../controllers/auth.controllers.js';
-const authRoutes = express.Router();
 import { authMiddleware } from '../middleware/auth.middleware.js';
+
+const authRoutes = express.Router();
 
 authRoutes.post('/register', registerUser);
 

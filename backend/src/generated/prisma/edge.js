@@ -200,11 +200,12 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
+  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
         "fromEnvVar": "DATABASE_URL",
-        "value": "postgresql://postgres:Evalia@127.0.0.1:5432/postgres"
+        "value": null
       }
     }
   },

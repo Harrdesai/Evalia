@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 const app = express();
+import { ApiError } from "./utils/api-error.js";
 
 app.use(
   cors({
@@ -43,9 +44,10 @@ app.use((err, req, res, next) => {
 // router imports
 import healthCheckRouter from './routes/healthcheck.routes.js';
 import authRouter from './routes/auth.routes.js';
-import { ApiError } from "./utils/api-error.js";
+import problemRoutes from "./routes/problem.routes.js";
 
 app.use("/api/v1/healthcheck", healthCheckRouter)
 app.use("/api/v1/auth", authRouter)
+app.use("/api/v1/problems", problemRoutes)
 
 export default app;

@@ -8,7 +8,6 @@ import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
 
-
 const registerUser = async (request, response) => {
 
   try {
@@ -66,11 +65,10 @@ const registerUser = async (request, response) => {
     )
   } catch (error) {
 
-    console.error("Error registering user:", error);
     response.status(error.statusCode).json(
-      new ApiResponse(error.statusCode, {
+      new ApiError(error.statusCode, "Error registering user", {
         error: error.message
-      }, "Error registering user")
+      })
     )
     
   }
@@ -128,11 +126,10 @@ const loginUser = async (request, response) => {
 
   } catch (error) {
 
-    console.error("Error logging in user:", error);
     response.status(error.statusCode).json(
-      new ApiResponse(error.statusCode, {
+      new ApiError(error.statusCode, "Error logging in user", {
         error: error.message
-      }, "Error logging in user")
+      })
     )
     
   }
@@ -154,9 +151,9 @@ const logoutUser = async (request, response) => {
     
     console.error("Error logging out user:", error);
     response.status(error.statusCode).json(
-      new ApiResponse(error.statusCode, {
+      new ApiError(error.statusCode, "Error logging out user", {
         error: error.message
-      }, "Error logging out user")
+      })
     )
   }
 }
@@ -175,9 +172,9 @@ const getMe = async (request, response) => {
     
     console.error("Error fetching user:", error);
     response.status(error.statusCode).json(
-      new ApiResponse(error.statusCode, {
+      new ApiError(error.statusCode, "Error fetching user", {
         error: error.message
-      }, "Error fetching user")
+      })
     )
   }
 }
