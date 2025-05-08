@@ -170,10 +170,32 @@ const updateProblem = async (request, response) => {
 
 const deleteProblem = async (request, response) => {
 
+  try {
+    
+    const id = request.params.id
+
+    const problem = await prisma.problem.delete({
+      where: {
+        id
+      }
+    })
+
+    if (!problem) {
+      throw new ApiError(404, "Problem not found")
+    }
+
+    response.status(200).json(
+      new ApiResponse(200, problem, "Problem deleted successfully")
+    )
+
+  } catch (error) {
+
+    throw new ApiError(500, "Error While deleting problem")
+  }
 }
 
 const getAllProblemsSolvedByUser = async (request, response) => {
-
+  
 }
 
 export {
