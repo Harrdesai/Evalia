@@ -117,6 +117,22 @@ const createProblem = async (request, response) => {
 }
 
 const getAllProblems = async (request, response) => {
+  try {
+    
+    const problems = await prisma.problem.findMany()
+
+    if (!problems) {
+      throw new ApiError(404, "Problems not found")
+    }
+
+    response.status(200).json(
+      new ApiResponse(200, problems, "Problems fetched successfully")
+    )
+  } catch (error) {
+
+    throw new ApiError(500, "Error While fetching problems") 
+
+  }
 
 }
 
