@@ -170,7 +170,7 @@ const updatePlaylist = async (request, response) => {
     response.status(200).json(
       new ApiResponse(200, playlist, "Playlist updated successfully")
     )
-    
+
   } catch (error) {
     
     response.status(error.statusCode || 500).json(
@@ -182,9 +182,42 @@ const updatePlaylist = async (request, response) => {
   }
 }
 
-const deleteProblemFromPlaylist = async (request, response) => { }
+const deleteProblemFromPlaylist = async (request, response) => {
 
-const deletePlaylist = async (request, response) => { }
+  try {
+
+    const playlistId = request.params.id
+    const problemIds = request.body.problemIds
+
+    if (!Array.isArray(problemIds) || problemIds.length === 0) {
+      throw new ApiError(400, "Invalid problem ids or no problem ids provided")
+    }
+
+    const problemsInPlaylist = await prisma.problemsInPlaylist.deleteMany({
+      where: {
+        playlistId,
+        problemId: {
+          in: problemIds
+        }
+      }
+    })
+
+    response.status(200).json(
+      new ApiResponse(200, problemsInPlaylist, "Problem deleted from playlist successfully")
+    )
+    
+  } catch (error) {
+    
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Failed to delete problem from playlist", {
+        error: error.message
+      })
+    )
+
+  }
+}
+
+const deletePlaylist = async (request, response) => {}
 
 export {
   getAllListDetails,
