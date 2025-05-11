@@ -47,10 +47,12 @@ import healthCheckRouter from './routes/healthcheck.routes.js';
 import authRouter from './routes/auth.routes.js';
 import problemRoutes from "./routes/problem.routes.js";
 import executionRoute from "./routes/execute-code.routes.js";
+import submissionRoute from "./routes/submission.routes.js";
 
 app.use("/api/v1/healthcheck", healthCheckRouter)
 app.use("/api/v1/auth", authRouter)
 app.use("/api/v1/problems", problemRoutes)
 app.use("/api/v1/execute-code", executionRoute)
+app.use("/api/v1/submissions", submissionRoute)
 
 export default app;
