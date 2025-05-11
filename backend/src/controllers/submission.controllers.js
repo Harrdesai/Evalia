@@ -23,7 +23,7 @@ const getAllSubmissions = async (request, response) => {
   } catch (error) {
     
     response.status(error.statusCode || 500).json(
-      new ApiError(error.statusCode || 500, "Error While fetching submissions", {
+      new ApiError(error.statusCode || 500, "Failed to fetch submissions", {
         error: error.message
       })
     )
@@ -48,11 +48,11 @@ const getSubmissionsForProblem = async (request, response) => {
     response.status(200).json(
       new ApiResponse(200, submissions, "Submissions fetched successfully")
     )
-    
+
   } catch (error) {
     
     response.status(error.statusCode || 500).json(
-      new ApiError(error.statusCode || 500, "Error While fetching submissions", {
+      new ApiError(error.statusCode || 500, "Failed to fetch submissions", {
         error: error.message
       })
     )
@@ -60,6 +60,31 @@ const getSubmissionsForProblem = async (request, response) => {
   }
 }
 
-const getAllTheSubmissionsForProblem = async (request, response) => {}
+const getAllTheSubmissionsForProblem = async (request, response) => {
+
+  try {
+    
+    const problemId = request.params.problemId;
+    
+    const submissions = await prisma.submission.findMany({
+      where: {
+        problemId
+      }
+    })
+
+    response.status(200).json(
+      new ApiResponse(200, submissions, "Submissions fetched successfully")
+    )
+
+  } catch (error) {
+    
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Failed to fetch submissions", {
+        error: error.message
+      })
+    )
+
+  }
+}
 
 export { getAllSubmissions, getSubmissionsForProblem, getAllTheSubmissionsForProblem }
