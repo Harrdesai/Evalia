@@ -8,6 +8,35 @@ const prisma = new PrismaClient();
 
 const getAllListDetails = async (request, response) => {
 
+  try {
+    
+    const userId = request.user.id
+    const playlists = await prisma.playlist.findMany({
+      where: {
+        userId
+      },
+      include: {
+        problems: {
+          include: {
+            problem: true
+          }
+        }
+      }
+    })
+
+    response.status(200).json(
+      new ApiResponse(200, playlists, "Playlists fetched successfully")
+    )
+
+  } catch (error) {
+    
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Error While fetching playlist", {
+        error: error.message
+      })
+    )
+    
+  }
 }
 
 const getPlaylistDetails = async (request, response) => { }
