@@ -31,7 +31,34 @@ const getAllSubmissions = async (request, response) => {
   }
 }
 
-const getSubmissionsForProblem = async (request, response) => {}
+const getSubmissionsForProblem = async (request, response) => {
+
+  try {
+    
+    const userId = request.user.id;
+    const problemId = request.params.problemId;
+
+    const submissions = await prisma.submission.findMany({
+      where: {
+        userId,
+        problemId
+      }
+    })
+
+    response.status(200).json(
+      new ApiResponse(200, submissions, "Submissions fetched successfully")
+    )
+    
+  } catch (error) {
+    
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Error While fetching submissions", {
+        error: error.message
+      })
+    )
+
+  }
+}
 
 const getAllTheSubmissionsForProblem = async (request, response) => {}
 
