@@ -1,9 +1,9 @@
 import { ApiResponse } from "../utils/api-response.js";
 import { ApiError } from "../utils/api-error.js";
-// import { PrismaClient } from "../generated/prisma/index.js";
+import { PrismaClient } from "../generated/prisma/index.js";
 import { getJudge0LanguageId, submitBatch, pollBatchResults } from "../utils/judge0.utils.js";
 
-// const prisma = new PrismaClient();
+const prisma = new PrismaClient();
 
 const createProblem = async (request, response) => {
 
@@ -159,7 +159,7 @@ const getProblemById = async (request, response) => {
     )
 
   } catch (error) {
-    
+
     response.status(error.statusCode || 500).json(
       new ApiError(error.statusCode || 500, "Error While fetching problem", {
         error: error.message
@@ -206,7 +206,38 @@ const deleteProblem = async (request, response) => {
 }
 
 const getAllProblemsSolvedByUser = async (request, response) => {
+  try {
 
+    const problem = await prisma.problem.findMany({
+      where: {
+        solvedBy: {
+          some: {
+            userId: request.user.id
+          }
+        }
+      },
+      include: {
+        solvedBy: {
+          where: {
+            userId: request.user.id
+          }
+        }
+      }
+    })
+
+    response.status(200).json(
+      new ApiResponse(200, problem, "Problems fetched successfully")
+    )
+
+  } catch (error) {
+
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Error While fetching problems", {
+        error: error.message
+      })
+    )
+
+  }
 }
 
 export {
