@@ -11,8 +11,6 @@ const createProblem = async (request, response) => {
 
   try {
 
-
-
     if (!title || !description || !difficulty || !tags || !examples || !constraints || !testcases || !codeSnippets || !referenceSolutions) {
 
       throw new ApiError(400, "Missing fields")
@@ -107,7 +105,7 @@ const createProblem = async (request, response) => {
   } catch (error) {
 
     response.status(error.statusCode || 500).json(
-      new ApiError(error.statusCode || 500, "Error creating problem", {
+      new ApiError(error.statusCode || 500, "Error While creating problem", {
         error: error.message
       })
     )
@@ -130,7 +128,11 @@ const getAllProblems = async (request, response) => {
     )
   } catch (error) {
 
-    throw new ApiError(500, "Error While fetching problems") 
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Error While fetching problems", {
+        error: error.message
+      })
+    )
 
   }
 
@@ -141,13 +143,13 @@ const getProblemById = async (request, response) => {
   try {
 
     const id = request.params.id
-    
+
     const problem = await prisma.problem.findUnique({
       where: {
         id
       }
     })
-  
+
     if (!problem) {
       throw new ApiError(404, "Problem not found")
     }
@@ -158,7 +160,11 @@ const getProblemById = async (request, response) => {
 
   } catch (error) {
     
-    throw new ApiError(500, "Error While fetching problem")
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Error While fetching problem", {
+        error: error.message
+      })
+    )
 
   }
 
@@ -171,7 +177,7 @@ const updateProblem = async (request, response) => {
 const deleteProblem = async (request, response) => {
 
   try {
-    
+
     const id = request.params.id
 
     const problem = await prisma.problem.delete({
@@ -190,12 +196,17 @@ const deleteProblem = async (request, response) => {
 
   } catch (error) {
 
-    throw new ApiError(500, "Error While deleting problem")
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Error While deleting problem", {
+        error: error.message
+      })
+    )
+
   }
 }
 
 const getAllProblemsSolvedByUser = async (request, response) => {
-  
+
 }
 
 export {
