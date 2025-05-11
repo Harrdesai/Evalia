@@ -20,12 +20,12 @@ playlistRoutes.get('/get-playlist-details/:id', authMiddleware, getPlaylistDetai
 
 playlistRoutes.post('/create-playlist', authMiddleware, createPlaylist);
 
-playlistRoutes.post('/add-problem-to-playlist', authMiddleware, addProblemToPlaylist);
+playlistRoutes.post('/add-problem/:playlistId', authMiddleware, addProblemToPlaylist);
 
 playlistRoutes.put('/update-playlist/:id', authMiddleware, updatePlaylist);
 
-playlistRoutes.delete('/delete-problem-from-playlist', authMiddleware, deleteProblemFromPlaylist);
+playlistRoutes.delete('/delete-problem-from-playlist/:playlistId', authMiddleware, deleteProblemFromPlaylist);
 
-playlistRoutes.delete('/delete-playlist/:id', authMiddleware, deletePlaylist);
+playlistRoutes.delete('/delete-playlist/:playlistId', authMiddleware, deletePlaylist);
 
 export default playlistRoutes;

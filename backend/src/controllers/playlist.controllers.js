@@ -116,18 +116,23 @@ const addProblemToPlaylist = async (request, response) => {
 
   try {
     
-    const userId = request.user.id
-    const playlistId = request.params.id
+    const playlistId = request.params.playlistId
     const problemIds = request.body.problemIds
+
+    if (!playlistId) {
+      throw new ApiError(400, "Playlist id is required")
+    }
 
     if (!Array.isArray(problemIds) || problemIds.length === 0) {
       throw new ApiError(400, "Invalid problem ids or no problem ids provided")
     }
 
-    const problemsInPlaylist = await prisma.problemsInPlaylist.createMany({
+    // loop the problemIds and check that problem id exist in playlist if yes then ingore else create a new array
+
+    const problemsInPlaylist = await prisma.problemInPlaylist.createMany({
       data: problemIds.map((problemId) => ({
         playlistId,
-        problemId
+        problemId,
       }))
     })
 
@@ -186,14 +191,14 @@ const deleteProblemFromPlaylist = async (request, response) => {
 
   try {
 
-    const playlistId = request.params.id
+    const playlistId = request.params.playlistId
     const problemIds = request.body.problemIds
 
     if (!Array.isArray(problemIds) || problemIds.length === 0) {
       throw new ApiError(400, "Invalid problem ids or no problem ids provided")
     }
 
-    const problemsInPlaylist = await prisma.problemsInPlaylist.deleteMany({
+    const problemsInPlaylist = await prisma.problemInPlaylist.deleteMany({
       where: {
         playlistId,
         problemId: {
@@ -221,7 +226,7 @@ const deletePlaylist = async (request, response) => {
 
   try {
     
-    const playlistId = request.params.id
+    const playlistId = request.params.playlistId
 
     const deletePlaylist = await prisma.playlist.delete({
       where: {
@@ -232,7 +237,7 @@ const deletePlaylist = async (request, response) => {
     response.status(200).json(
       new ApiResponse(200, deletePlaylist, "Playlist deleted successfully")
     )
-    
+
   } catch (error) {
     
     response.status(error.statusCode || 500).json(
