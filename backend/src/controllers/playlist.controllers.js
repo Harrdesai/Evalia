@@ -35,11 +35,48 @@ const getAllListDetails = async (request, response) => {
         error: error.message
       })
     )
-    
+
   }
 }
 
-const getPlaylistDetails = async (request, response) => { }
+const getPlaylistDetails = async (request, response) => {
+  try {
+    
+    const playlistId = request.params.id
+    const userId = request.user.id
+
+    const playlist = await prisma.playlist.findFirst({
+      where: {
+        id: playlistId,
+        userId
+      },
+      include: {
+        problems: {
+          include: {
+            problem: true
+          }
+        }
+      }
+    })
+
+    if (!playlist) {
+      throw new ApiError(404, "Playlist not found")
+    }
+
+    response.status(200).json(
+      new ApiResponse(200, playlist, "Playlist details fetched successfully")
+    )
+
+  } catch (error) {
+    
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Error While fetching playlist details", {
+        error: error.message
+      })
+    )
+
+  }
+}
 
 const createPlaylist = async (request, response) => {
 
