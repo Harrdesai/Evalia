@@ -112,7 +112,39 @@ const createPlaylist = async (request, response) => {
   }
 }
 
-const addProblemToPlaylist = async (request, response) => { }
+const addProblemToPlaylist = async (request, response) => {
+
+  try {
+    
+    const userId = request.user.id
+    const playlistId = request.params.id
+    const problemIds = request.body.problemIds
+
+    if (!Array.isArray(problemIds) || problemIds.length === 0) {
+      throw new ApiError(400, "Invalid problem ids or no problem ids provided")
+    }
+
+    const problemsInPlaylist = await prisma.problemsInPlaylist.createMany({
+      data: problemIds.map((problemId) => ({
+        playlistId,
+        problemId
+      }))
+    })
+
+    response.status(200).json(
+      new ApiResponse(200, problemsInPlaylist, "Problem added to playlist successfully")
+    )
+
+  } catch (error) {
+    
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Error While adding problem to playlist", {
+        error: error.message
+      })
+    )
+
+  }
+}
 
 const updatePlaylist = async (request, response) => { }
 
