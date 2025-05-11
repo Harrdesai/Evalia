@@ -146,7 +146,41 @@ const addProblemToPlaylist = async (request, response) => {
   }
 }
 
-const updatePlaylist = async (request, response) => { }
+const updatePlaylist = async (request, response) => {
+
+  try {
+    
+    const playlistId = request.params.id
+    const { name, description } = request.body
+
+    if (!name || !description) {
+      throw new ApiError(400, "Name and description are required")
+    }
+
+    const playlist = await prisma.playlist.update({
+      where: {
+        id: playlistId
+      },
+      data: {
+        name,
+        description
+      }
+    })
+
+    response.status(200).json(
+      new ApiResponse(200, playlist, "Playlist updated successfully")
+    )
+    
+  } catch (error) {
+    
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Error While updating playlist", {
+        error: error.message
+      })
+    )
+
+  }
+}
 
 const deleteProblemFromPlaylist = async (request, response) => { }
 
