@@ -217,7 +217,32 @@ const deleteProblemFromPlaylist = async (request, response) => {
   }
 }
 
-const deletePlaylist = async (request, response) => {}
+const deletePlaylist = async (request, response) => {
+
+  try {
+    
+    const playlistId = request.params.id
+
+    const deletePlaylist = await prisma.playlist.delete({
+      where: {
+        id: playlistId
+      }
+    })
+
+    response.status(200).json(
+      new ApiResponse(200, deletePlaylist, "Playlist deleted successfully")
+    )
+    
+  } catch (error) {
+    
+    response.status(error.statusCode || 500).json(
+      new ApiError(error.statusCode || 500, "Failed to delete playlist", {
+        error: error.message
+      })
+    )
+
+  }
+}
 
 export {
   getAllListDetails,
