@@ -86,7 +86,7 @@ model Submission {
   user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
   problem Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
 
-  testcases TestCaseResult[]
+  testCases TestCaseResult[]
 }
 
 model TestCaseResult {
@@ -95,6 +95,7 @@ model TestCaseResult {
   testCase      Int
   passed        Boolean
   stdout        String?
+  expected      String
   stderr        String?
   compileOutput String?
   status        String // Accepted, Wrong Answer
