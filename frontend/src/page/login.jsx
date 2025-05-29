@@ -15,7 +15,6 @@ import {z} from "zod";
 import AuthImagePattern from '../components/AuthImagePattern';
 import { useAuthStore } from '../store/useAuthStore';
 
-
 const LoginSchema = z.object({
   email:z.string().email("Enter a valid email"),
   password:z.string().min(6 , "Password must be atleast of 6 characters"),
@@ -44,7 +43,6 @@ const LoginPage = () => {
       console.error("Login failed" , error)
     }
   }
-
 
   return (
     <div className='h-screen grid lg:grid-cols-2'>
@@ -152,7 +150,6 @@ const LoginPage = () => {
       </div>
 
        {/* Right Side - Image/Pattern */}
-     {/* Right Side - Image/Pattern */}
       <AuthImagePattern
         title={"Welcome back!"}
         subtitle={
