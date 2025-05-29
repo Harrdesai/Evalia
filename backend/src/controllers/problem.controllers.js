@@ -117,7 +117,15 @@ const createProblem = async (request, response) => {
 const getAllProblems = async (request, response) => {
   try {
 
-    const problems = await prisma.problem.findMany()
+    const problems = await prisma.problem.findMany({
+      include: {
+        solvedBy: {
+          where: {
+            userId: request.user.id
+          }
+        }
+      }
+    })
 
     if (!problems) {
       throw new ApiError(404, "Problems not found")
@@ -212,13 +220,6 @@ const getAllProblemsSolvedByUser = async (request, response) => {
       where: {
         solvedBy: {
           some: {
-            userId: request.user.id
-          }
-        }
-      },
-      include: {
-        solvedBy: {
-          where: {
             userId: request.user.id
           }
         }
