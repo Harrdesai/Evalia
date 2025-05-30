@@ -141,11 +141,11 @@ const ProblemsTable = ({ problems }) => {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Solved</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Tags</TableHead>
-              <TableHead>Difficulty</TableHead>
-              <TableHead>Actions</TableHead>
+              <TableHead className="text-center">Solved</TableHead>
+              <TableHead >Title</TableHead>
+              <TableHead className="text-center">Tags</TableHead>
+              <TableHead className="text-center">Difficulty</TableHead>
+              <TableHead className="text-center">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -156,7 +156,7 @@ const ProblemsTable = ({ problems }) => {
                 );
                 return (
                   <TableRow key={problem.id}>
-                    <TableCell>
+                    <TableCell className="text-center">
                       <Checkbox
                         type="checkbox"
                         checked={isSolved}
@@ -164,10 +164,17 @@ const ProblemsTable = ({ problems }) => {
                         className="checkbox checkbox-sm"
                       />
                     </TableCell>
-                    <TableCell>{problem.title}</TableCell>
-                    <TableCell>{problem.tags?.join(", ")}</TableCell>
-                    <TableCell>{problem.difficulty}</TableCell>
-                    <TableCell className="text-center">
+                    <TableCell>
+                      <Link
+                        to={`/problem/${problem.id}`}
+                        className="hover:text-amber-500"
+                      >
+                        {problem.title}
+                      </Link>
+                    </TableCell>
+                    <TableCell className="text-center">{problem.tags?.join(", ")}</TableCell>
+                    <TableCell className="text-center">{problem.difficulty}</TableCell>
+                    <TableCell className="justify-items-center">
                       <div className="flex gap-4">
                         <Button
                           variant="ghost"
