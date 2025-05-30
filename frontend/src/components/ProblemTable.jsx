@@ -3,11 +3,35 @@
 import React, { useState, useMemo } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import { Bookmark, PencilIcon, Trash, TrashIcon, Plus } from "lucide-react";
+import {
+  Bookmark,
+  PencilIcon,
+  Trash,
+  TrashIcon,
+  Plus,
+  ChevronDown,
+} from "lucide-react";
 import { useActions } from "../store/useAction";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCaption,
+  TableCell,
+  TableFooter,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Checkbox } from "@/components/ui/checkbox";
 
 const ProblemsTable = ({ problems }) => {
   const { authUser } = useAuthStore();
@@ -46,6 +70,16 @@ const ProblemsTable = ({ problems }) => {
       );
   }, [problems, search, difficulty, selectedTag]);
 
+  // Pagination logic
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(filteredProblems.length / itemsPerPage);
+  const paginatedProblems = useMemo(() => {
+    return filteredProblems.slice(
+      (currentPage - 1) * itemsPerPage,
+      currentPage * itemsPerPage
+    );
+  }, [filteredProblems, currentPage]);
+
   return (
     <div className="w-full max-w-6xl mx-auto mt-10">
       {/* Header with Create Playlist Button */}
@@ -65,7 +99,27 @@ const ProblemsTable = ({ problems }) => {
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        <Select>
+        <Select value={selectedTag} onValueChange={setSelectedTag}>
+          <SelectTrigger className="w-xs">
+            <SelectValue
+              placeholder="Select tag"
+              className="select bg-stone-200 rounded-full text-stone-700 text-base"
+              value={selectedTag}
+              onChange={(e) => setSelectedTag(e.target.value)}
+            />
+          </SelectTrigger>
+
+          <SelectContent>
+            <SelectItem value="ALL">All Tags</SelectItem>
+            {allTags.map((tag) => (
+              <SelectItem key={tag} value={tag}>
+                {tag}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+
+        <Select value={difficulty} onValueChange={setDifficulty}>
           <SelectTrigger className="w-xs">
             <SelectValue
               placeholder="Select difficulty"
@@ -82,26 +136,94 @@ const ProblemsTable = ({ problems }) => {
             ))}
           </SelectContent>
         </Select>
-
-        <Select>
-          <SelectTrigger className="w-xs">
-            <SelectValue
-              placeholder="Select tag"
-              className="select bg-stone-200 rounded-full text-stone-700 text-base"
-              value={selectedTag}
-              onChange={(e) => setSelectedTag(e.target.value)}
-            />
-          </SelectTrigger>
-          
-          <SelectContent>
-          <SelectItem value="ALL">All Tags</SelectItem >
-          {allTags.map((tag) => (
-            <SelectItem  key={tag} value={tag}>
-              {tag}
-            </SelectItem >
-          ))}
-          </SelectContent>
-        </Select>
+      </div>
+      <div>
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Solved</TableHead>
+              <TableHead>Title</TableHead>
+              <TableHead>Tags</TableHead>
+              <TableHead>Difficulty</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedProblems.length > 0 ? (
+              paginatedProblems.map((problem) => {
+                const isSolved = problem.solvedBy.some(
+                  (user) => user.userId === authUser?.id
+                );
+                return (
+                  <TableRow key={problem.id}>
+                    <TableCell>
+                      <Checkbox
+                        type="checkbox"
+                        checked={isSolved}
+                        readOnly
+                        className="checkbox checkbox-sm"
+                      />
+                    </TableCell>
+                    <TableCell>{problem.title}</TableCell>
+                    <TableCell>{problem.tags?.join(", ")}</TableCell>
+                    <TableCell>{problem.difficulty}</TableCell>
+                    <TableCell className="text-center">
+                      <div className="flex gap-4">
+                        <Button
+                          variant="ghost"
+                          size="xs"
+                          onClick={() => {
+                            setSelectedProblemId(problem.id);
+                            setIsAddToPlaylistModalOpen(true);
+                          }}
+                        >
+                          <Bookmark className=" text-amber-500 fill-amber-500" />
+                        </Button>
+                        {authUser?.role === "CLIENT" && (
+                          <div className="flex gap-4">
+                            <Button
+                              onClick={() => handleDelete(problem.id)}
+                              variant="ghost"
+                              size="xs"
+                            >
+                              <TrashIcon className=" text-amber-500 " />
+                            </Button>
+                            <Button disabled variant="ghost" size="xs">
+                              <PencilIcon className=" text-amber-500" />
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })
+            ) : (
+              <TableRow>
+                <TableCell colSpan={5}>No problems found</TableCell>
+              </TableRow>
+            )}
+          </TableBody>
+        </Table>
+        <div className="flex justify-center mt-6 gap-2">
+          <Button
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            variant="ghost"
+          >
+            Prev
+          </Button>
+          <span className="btn btn-ghost btn-sm">
+            {currentPage} / {totalPages}
+          </span>
+          <Button
+            disabled={currentPage === totalPages}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            variant="ghost"
+          >
+            Next
+          </Button>
+        </div>
       </div>
     </div>
   );
