@@ -12,6 +12,7 @@ import Layout from "./layout/layout";
 import AdminRoute from "./components/AdminRoute";
 import ProblemPage from "./page/ProblemPage";
 import AddProblem from "./page/AddProblem";
+import Profile from "./page/Profile";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -22,14 +23,14 @@ function App() {
 
   if (isCheckingAuth && !authUser) {
     return (
-      <div className="flex items-center justify-center h-screen">
+      <div className="flex items-center justify-center h-screen bg-stone-50">
         <Loader className="size-10animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col items-center justify-start">
+    <div className="flex flex-col items-center justify-start bg-stone-50">
       <Toaster />
       <Routes>
         <Route path="/" element={<Layout />}>
@@ -45,6 +46,11 @@ function App() {
         <Route
           path="/login"
           element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+        />
+
+        <Route
+          path="/profile"
+          element={authUser ? <Profile /> : <Navigate to="/profile" />}
         />
 
         <Route

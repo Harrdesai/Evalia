@@ -5,6 +5,14 @@ import { User, Code, LogOut } from "lucide-react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
 import LogoutButton from "./LogoutButton";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const Navbar = () => {
   const { authUser } = useAuthStore();
@@ -13,26 +21,21 @@ const Navbar = () => {
 
   return (
     <nav className="sticky top-0 z-50 w-full py-5">
-      <div className="flex w-full justify-between mx-auto max-w-4xl bg-black/15 shadow-lg shadow-neutral-600/5 backdrop-blur-lg border border-gray-200/10 p-4 rounded-2xl">
+      <div className="flex w-7xl justify-between bg-black/10 shadow-lg shadow-neutral-600/5 backdrop-blur-lg border border-gray-200/10 p-2 pl-8 rounded-full">
         {/* Logo Section */}
         <Link to="/" className="flex items-center gap-3 cursor-pointer">
-          <img
-            src="/leetlab.svg"
-            className="h-18 w-18 bg-primary/20 text-primary border-none px-2 py-2 rounded-full"
-          />
-          <span className="text-lg md:text-2xl font-bold tracking-tight text-white hidden md:block">
-            Leetlab
+          <span className="text-lg md:text-3xl font-bold tracking-tight text-amber-500 hidden md:block">
+            Evalia
           </span>
         </Link>
 
         {/* User Profile and Dropdown */}
+
+        {/* User Profile and Dropdown */}
         <div className="flex items-center gap-8">
-          <div className="dropdown dropdown-end">
-            <label
-              tabIndex={0}
-              className="btn btn-ghost btn-circle avatar flex flex-row "
-            >
-              <div className="w-10 rounded-full ">
+          <DropdownMenu>
+            <DropdownMenuTrigger className="outline-none" asChild>
+              <div className="w-10 rounded-full">
                 <img
                   src={
                     authUser?.image ||
@@ -42,46 +45,31 @@ const Navbar = () => {
                   className="object-cover"
                 />
               </div>
-            </label>
-            <ul
-              tabIndex={0}
-              className="menu menu-sm dropdown-content mt-3 z-[1] p-2 shadow bg-base-100 rounded-box w-52 space-y-3"
-            >
-              {/* Admin Option */}
-
-              {/* Common Options */}
-              <li>
-                <p className="text-base font-semibold">{authUser?.name}</p>
-                <hr className="border-gray-200/10" />
-              </li>
-              <li>
-                <Link
-                  to="/profile"
-                  className="hover:bg-primary hover:text-white text-base font-semibold"
-                >
-                  <User className="w-4 h-4 mr-2" />
-                  My Profile
+              {/* <SelectValue placeholder="Theme" /> */}
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem className="w-42">
+                <Link to="/profile" className="flex items-center">
+                  <User className="w-6 h-6 mr-2" />
+                  {authUser?.name}
                 </Link>
-              </li>
+              </DropdownMenuItem>
               {authUser?.role === "CLIENT" && (
-                <li>
-                  <Link
-                    to="/add-problem"
-                    className="hover:bg-primary hover:text-white text-base font-semibold"
-                  >
-                    <Code className="w-4 h-4 mr-1" />
+                <DropdownMenuItem>
+                  <Link to="/add-problem" className="flex items-center">
+                    <Code className="w-6 h-6 mr-2" />
                     Add Problem
                   </Link>
-                </li>
+                </DropdownMenuItem>
               )}
-              <li>
-                <LogoutButton className="hover:bg-primary hover:text-white">
-                  <LogOut className="w-4 h-4 mr-2" />
+              <DropdownMenuItem>
+                <LogoutButton>
+                  <LogOut className="w-6 h-6 mr-2" />
                   Logout
                 </LogoutButton>
-              </li>
-            </ul>
-          </div>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </nav>

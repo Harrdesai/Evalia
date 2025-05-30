@@ -11,7 +11,7 @@ const LogoutButton = ({ children }) => {
   };
 
   return (
-    <button className="btn btn-primary" onClick={onLogout}>
+    <button className="flex items-center gap-2" onClick={onLogout}>
       {children}
     </button>
   );
