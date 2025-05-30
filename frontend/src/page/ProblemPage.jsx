@@ -59,7 +59,7 @@ const ProblemPage = () => {
 
   const [code, setCode] = useState("");
   const [activeTab, setActiveTab] = useState("description");
-  const [selectedLanguage, setSelectedLanguage] = useState("javascript");
+  const [selectedLanguage, setSelectedLanguage] = useState("JAVASCRIPT");
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
 
@@ -133,7 +133,7 @@ const ProblemPage = () => {
 
             {problem.examples && (
               <>
-                <h3 className="text-xl font-bold mb-4">Examples:</h3>
+                <h3 className="text-xl font-bold pl-4 mb-4">Examples:</h3>
                 {Object.entries(problem.examples).map(
                   ([lang, example], idx) => (
                     <div
@@ -152,7 +152,7 @@ const ProblemPage = () => {
                         <div className="text-stone-700 mb-2 text-base font-semibold">
                           Output:
                         </div>
-                        <span className="bg-black/20 px-4 py-1 rounded-full font-semibold text-black">
+                        <span className="bg-black/20 px-4 py-1 rounded-full font-semibold text-stone-700">
                           {example.output}
                         </span>
                       </div>
@@ -161,7 +161,7 @@ const ProblemPage = () => {
                           <div className="text-amber-500 mb-2 text-base font-semibold">
                             Explanation:
                           </div>
-                          <p className="text-base-content/70 text-lg font-semibold">
+                          <p className="text-stone-700 text-lg font-semibold">
                             {example.explanation}
                           </p>
                         </div>
@@ -174,9 +174,9 @@ const ProblemPage = () => {
 
             {problem.constraints && (
               <>
-                <h3 className="text-xl font-bold mb-4">Constraints:</h3>
+                <h3 className="text-xl pl-4 font-bold mb-4">Constraints:</h3>
                 <div className="bg-base-200 p-6 rounded-xl mb-6">
-                  <span className="bg-black/20 px-4 py-1 rounded-full font-semibold text-black">
+                  <span className="bg-black/20 px-4 rounded-full font-semibold text-stone-700">
                     {problem.constraints}
                   </span>
                 </div>
@@ -270,14 +270,11 @@ const ProblemPage = () => {
             <Share2 className="w-5 h-5" />
           </button>
           <div className="flex">
-            <Select>
-              <SelectTrigger size="sm">
-                <SelectValue
-                  placeholder="Select language"
-                  className="select select-bordered select-primary w-40"
-                  value={selectedLanguage}
-                  onChange={handleLanguageChange}
-                />
+            <Select
+              onValueChange={setSelectedLanguage}
+            >
+              <SelectTrigger>
+                <SelectValue placeholder="JavaScript"/>
               </SelectTrigger>
               <SelectContent>
                 {Object.keys(problem.codeSnippets.createMany.data || {}).map(
@@ -409,14 +406,14 @@ const ProblemPage = () => {
             ) : (
               <>
                 <div className="flex items-center justify-between mb-6">
-                  <h3 className="text-xl font-bold pl-4">Test Cases</h3>
+                  <h3 className="text-xl font-bold text-amber-500 pl-4">Test Cases</h3>
                 </div>
                 <div className="overflow-x-auto">
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead className="text-center">Input</TableHead>
-                        <TableHead className="text-center">
+                        <TableHead className="text-center text-stone-700">Input</TableHead>
+                        <TableHead className="text-center text-stone-700">
                           Expected Output
                         </TableHead>
                       </TableRow>
@@ -424,10 +421,10 @@ const ProblemPage = () => {
                     <TableBody>
                       {testcases.map((testCase, index) => (
                         <TableRow key={index}>
-                          <TableCell className="font-mono text-center">
+                          <TableCell className="font-mono text-center text-stone-700">
                             {testCase.input}
                           </TableCell>
-                          <TableCell className="font-mono text-center">
+                          <TableCell className="font-mono text-center text-stone-700">
                             {testCase.output}
                           </TableCell>
                         </TableRow>
