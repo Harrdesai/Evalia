@@ -162,9 +162,45 @@ const getMe = async (request, response) => {
 
   try {
 
+    const userDetail = await prisma.user.findUnique({
+      where: {
+        id: request.user.id
+      },
+      include: {
+        solvedProblems: {
+          include: {
+            problem: true
+          }
+        },
+        playlists: {
+          include: {
+            problems: {
+              include: {
+                problem: true
+              }
+            }
+          }
+        }
+      }
+    })
+
+    if (!userDetail) {
+      throw new ApiError(404, "User not found")
+    }
+
     response.status(200).json(
       new ApiResponse(200, {
-        user: request.user
+        user: {
+          id: userDetail.id,
+          name: userDetail.name,
+          email: userDetail.email,
+          role: userDetail.role,
+          image: userDetail.image,
+          createdAt: userDetail.createdAt,
+          updatedAt: userDetail.updatedAt,
+          solvedProblems: userDetail.solvedProblems,
+          playlists: userDetail.playlists
+        }
       }, "User data fetched successfully")
     )
 
