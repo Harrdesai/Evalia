@@ -30,8 +30,6 @@ const Navbar = () => {
         </Link>
 
         {/* User Profile and Dropdown */}
-
-        {/* User Profile and Dropdown */}
         <div className="flex items-center gap-8">
           <DropdownMenu>
             <DropdownMenuTrigger className="outline-none" asChild>

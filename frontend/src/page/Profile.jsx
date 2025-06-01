@@ -74,7 +74,7 @@ const Profile = ({ userData }) => {
   const { name, email, image, createdAt, solvedProblems, playlists } = authUser;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 space-y-6">
+    <div className="w-4xl py-10 space-y-6">
       <Card>
         <CardHeader className="flex items-center space-x-4">
           <Avatar className="h-16 w-16">

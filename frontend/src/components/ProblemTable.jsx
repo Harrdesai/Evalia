@@ -3,14 +3,7 @@
 import React, { useState, useMemo } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import {
-  Bookmark,
-  PencilIcon,
-  Trash,
-  TrashIcon,
-  Plus,
-  ChevronDown,
-} from "lucide-react";
+import { Bookmark, PencilIcon, Trash, Plus } from "lucide-react";
 import { useActions } from "../store/useAction";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -24,7 +17,6 @@ import {
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableFooter,
   TableHead,
@@ -32,7 +24,18 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Checkbox } from "@/components/ui/checkbox";
-
+import AddToPlaylistModal from "./AddToPlaylist";
+import CreatePlaylistModal from "./CreatePlaylistModal";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 const ProblemsTable = ({ problems }) => {
   const { authUser } = useAuthStore();
   const { onDeleteProblem } = useActions();
@@ -79,6 +82,20 @@ const ProblemsTable = ({ problems }) => {
       currentPage * itemsPerPage
     );
   }, [filteredProblems, currentPage]);
+
+  const handleDelete = (id) => {
+    onDeleteProblem(id);
+  };
+
+  const handleCreatePlaylist = async (data) => {
+    await createPlaylist(data);
+  };
+
+  const handleAddToPlaylist = (problemId) => {
+    console.log(`problemID ${problemId}`);
+    setSelectedProblemId(problemId);
+    setIsAddToPlaylistModalOpen(true);
+  };
 
   return (
     <div className="w-full max-w-6xl mx-auto mt-10">
@@ -142,7 +159,7 @@ const ProblemsTable = ({ problems }) => {
           <TableHeader>
             <TableRow>
               <TableHead className="text-center">Solved</TableHead>
-              <TableHead >Title</TableHead>
+              <TableHead>Title</TableHead>
               <TableHead className="text-center">Tags</TableHead>
               <TableHead className="text-center">Difficulty</TableHead>
               <TableHead className="text-center">Actions</TableHead>
@@ -172,19 +189,20 @@ const ProblemsTable = ({ problems }) => {
                         {problem.title}
                       </Link>
                     </TableCell>
-                    <TableCell className="text-center">{problem.tags?.join(", ")}</TableCell>
-                    <TableCell className="text-center">{problem.difficulty}</TableCell>
+                    <TableCell className="text-center">
+                      {problem.tags?.join(", ")}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {problem.difficulty}
+                    </TableCell>
                     <TableCell className="justify-items-center">
                       <div className="flex gap-4">
                         <Button
+                          onClick={() => handleAddToPlaylist(problem.id)}
                           variant="ghost"
                           size="xs"
-                          onClick={() => {
-                            setSelectedProblemId(problem.id);
-                            setIsAddToPlaylistModalOpen(true);
-                          }}
                         >
-                          <Bookmark className=" text-amber-500 fill-amber-500" />
+                          <Bookmark className="text-amber-500 fill-amber-500" />
                         </Button>
                         {authUser?.role === "CLIENT" && (
                           <div className="flex gap-4">
@@ -193,7 +211,7 @@ const ProblemsTable = ({ problems }) => {
                               variant="ghost"
                               size="xs"
                             >
-                              <TrashIcon className=" text-amber-500 " />
+                              <Trash className=" text-amber-500 " />
                             </Button>
                             <Button disabled variant="ghost" size="xs">
                               <PencilIcon className=" text-amber-500" />
@@ -232,6 +250,19 @@ const ProblemsTable = ({ problems }) => {
           </Button>
         </div>
       </div>
+
+      {/* Modals */}
+      <CreatePlaylistModal
+        isOpen={isCreateModalOpen}
+        onClose={() => setIsCreateModalOpen(false)}
+        onSubmit={handleCreatePlaylist}
+      />
+
+      <AddToPlaylistModal
+        isOpen={isAddToPlaylistModalOpen}
+        onClose={() => setIsAddToPlaylistModalOpen(false)}
+        problemId={selectedProblemId}
+      />
     </div>
   );
 };

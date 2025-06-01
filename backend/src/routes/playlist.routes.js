@@ -20,7 +20,7 @@ playlistRoutes.get('/get-playlist-details/:id', authMiddleware, getPlaylistDetai
 
 playlistRoutes.post('/create-playlist', authMiddleware, createPlaylist);
 
-playlistRoutes.post('/add-problem/:playlistId', authMiddleware, addProblemToPlaylist);
+playlistRoutes.post('/:playlistId/add-problem', authMiddleware, addProblemToPlaylist);
 
 playlistRoutes.put('/update-playlist/:id', authMiddleware, updatePlaylist);
 
