@@ -69,6 +69,7 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Add to Playlist</DialogTitle>
+          <DialogDescription />
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)}>
@@ -105,32 +106,30 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
                       )}
                     </SelectContent>
                   </Select>
-                  <DialogFooter className="flex justify-end gap-2 mt-6">
-                    <DialogClose asChild>
-                      <Button
-                        type="button"
-                        onClick={onClose}
-                        className="btn btn-ghost"
-                      >
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <Button
-                      type="submit"
-                      className="btn btn-primary"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? (
-                        <Loader className="w-4 h-4 animate-spin" />
-                      ) : (
-                        <Plus className="w-4 h-4" />
-                      )}
-                      Add to Playlist
-                    </Button>
-                  </DialogFooter>
+                  <FormMessage />
                 </FormItem>
               )}
             />
+            <DialogFooter className="flex justify-end gap-2 mt-6">
+              <DialogClose asChild>
+                <Button
+                  onClick={onClose}
+                >
+                  Cancel
+                </Button>
+              </DialogClose>
+              <Button
+                type="submit"
+                disabled={isLoading}
+              >
+                {isLoading ? (
+                  <Loader className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Plus className="w-4 h-4" />
+                )}
+                Add to Playlist
+              </Button>
+            </DialogFooter>
           </form>
         </Form>
       </DialogContent>

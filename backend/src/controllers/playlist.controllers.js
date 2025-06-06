@@ -154,7 +154,7 @@ const addProblemToPlaylist = async (request, response) => {
 const updatePlaylist = async (request, response) => {
 
   try {
-    
+    console.log("request", request)
     const playlistId = request.params.id
     const { name, description } = request.body
 

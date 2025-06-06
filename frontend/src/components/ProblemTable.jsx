@@ -36,6 +36,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
 const ProblemsTable = ({ problems }) => {
   const { authUser } = useAuthStore();
   const { onDeleteProblem } = useActions();

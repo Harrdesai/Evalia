@@ -1,6 +1,6 @@
 // src/pages/Profile.jsx
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -21,14 +21,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
-import { Separator } from "@/components/ui/separator";
 import {
-  CheckCircle2,
-  Mail,
-  PencilIcon,
+  Edit,
   TrashIcon,
-  UserCircle2,
 } from "lucide-react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
@@ -43,14 +38,27 @@ import {
   DialogClose,
   DialogFooter,
 } from "@/components/ui/dialog";
+import UpdatePlaylistDetailModal from "../components/UpdatePlaylistDetailModal";
 
 const Profile = ({ userData }) => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
-  const { deletePlaylist } = usePlaylistStore();
+  const { deletePlaylist, getAllPlaylists, playlists } = usePlaylistStore();
+
+  const [selectedPlaylistId, setSelectedPlaylistId] = useState(null);
+    
+  const [isUpdatePlaylistDetailModalOpen, setIsUpdatePlaylistDetailModalOpen] =useState(false);
+
+  const { name, email, image, createdAt, solvedProblems } = authUser;
 
   useEffect(() => {
     checkAuth();
+    getAllPlaylists();
   }, []);
+
+  const handleUpdatePlaylistDetail = (playlistId) => {
+    setSelectedPlaylistId(playlistId);
+    setIsUpdatePlaylistDetailModalOpen(true);
+  };
 
   if (isCheckingAuth) {
     return (
@@ -71,15 +79,15 @@ const Profile = ({ userData }) => {
     );
   }
 
-  const { name, email, image, createdAt, solvedProblems, playlists } = authUser;
-
   return (
-    <div className="w-4xl py-10 space-y-6">
+    <div className="w-6xl py-10 space-y-6">
       <Card>
         <CardHeader className="flex items-center space-x-4">
           <Avatar className="h-16 w-16">
             <AvatarImage src={image || ""} />
-            <AvatarFallback>{name?.charAt(0).toUpperCase()}</AvatarFallback>
+            <AvatarFallback className="text-2xl">
+              {name?.split(" ").map((part) => part.charAt(0).toUpperCase()).slice(0, 2).join("")}
+            </AvatarFallback>
           </Avatar>
           <div>
             <CardTitle className="text-xl">{name}</CardTitle>
@@ -89,12 +97,14 @@ const Profile = ({ userData }) => {
             </p>
           </div>
         </CardHeader>
+        <CardDescription />
       </Card>
 
       <Card>
         <CardHeader>
           <CardTitle>Solved Problems</CardTitle>
         </CardHeader>
+        <CardDescription />
         <CardContent>
           <div>
             <Table>
@@ -152,9 +162,16 @@ const Profile = ({ userData }) => {
                 <TableRow key={playlist.id}>
                   <TableCell>{playlist.name}</TableCell>
                   <TableCell className="text-end">
+                    <Button
+                      onClick={() => handleUpdatePlaylistDetail(playlist.id)}
+                      variant="ghost"
+                      size="xs"
+                    >
+                      <Edit className="text-amber-500" />
+                    </Button>
                     <Dialog>
                       <DialogTrigger asChild>
-                        <Button variant="ghost">
+                        <Button variant="ghost" className="text-red-500 ml-4">
                           <TrashIcon className="mr-2 h-4 w-4" />
                         </Button>
                       </DialogTrigger>
@@ -162,7 +179,7 @@ const Profile = ({ userData }) => {
                         <DialogHeader>
                           <DialogTitle>Are you sure?</DialogTitle>
                           <DialogDescription>
-                            This will permanently delete the playlist:{" "}
+                            This will permanently delete the playlist:{" /n"}
                             <strong>{playlist.name}</strong>
                           </DialogDescription>
                         </DialogHeader>
@@ -174,8 +191,9 @@ const Profile = ({ userData }) => {
                             <Button
                               variant="destructive"
                               onClick={() => deletePlaylist(playlist.id)}
+                              className="ml-2"
                             >
-                              Confirm Delete
+                              Delete
                             </Button>
                           </DialogClose>
                         </DialogFooter>
@@ -188,6 +206,13 @@ const Profile = ({ userData }) => {
           </Table>
         </CardContent>
       </Card>
+
+      {/* Modals */}
+      <UpdatePlaylistDetailModal
+        isOpen={isUpdatePlaylistDetailModalOpen}
+        onClose={() => setIsUpdatePlaylistDetailModalOpen(false)}
+        playlistId={selectedPlaylistId}
+      />
     </div>
   );
 };

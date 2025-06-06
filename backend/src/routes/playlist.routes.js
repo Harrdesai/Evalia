@@ -16,13 +16,13 @@ const playlistRoutes = Router();
 
 playlistRoutes.get('/get-all-list-details', authMiddleware, getAllListDetails);
 
-playlistRoutes.get('/get-playlist-details/:id', authMiddleware, getPlaylistDetails);
+playlistRoutes.get('/:id/get-playlist-details', authMiddleware, getPlaylistDetails);
 
 playlistRoutes.post('/create-playlist', authMiddleware, createPlaylist);
 
 playlistRoutes.post('/:playlistId/add-problem', authMiddleware, addProblemToPlaylist);
 
-playlistRoutes.put('/update-playlist/:id', authMiddleware, updatePlaylist);
+playlistRoutes.put('/:id/update-playlist-detail', authMiddleware, updatePlaylist);
 
 playlistRoutes.delete('/delete-problem-from-playlist/:playlistId', authMiddleware, deleteProblemFromPlaylist);
 

@@ -23,7 +23,6 @@ export const usePlaylistStore = create((set, get) => ({
       toast.success("Playlist created successfully");
       return response.data.data;
     } catch (error) {
-      console.error("Error creating playlist:", error);
       toast.error(error.response?.data?.error || "Failed to create playlist");
       throw error;
     } finally {
@@ -36,7 +35,6 @@ export const usePlaylistStore = create((set, get) => ({
       set({ isLoading: true });
       const response = await axiosInstance.get("/playlists/get-all-list-details");
       set({ playlists: response.data.data });
-      console.log(`playlist data`, response.data.data);
     } catch (error) {
       console.error("Error fetching playlists:", error);
       toast.error("Failed to fetch playlists");
@@ -48,13 +46,50 @@ export const usePlaylistStore = create((set, get) => ({
   getPlaylistDetails: async (playlistId) => {
     try {
       set({ isLoading: true });
-      const response = await axiosInstance.get(`/playlists/${playlistId}`);
+      const response = await axiosInstance.get(`/playlists/${playlistId}/get-playlist-details`);
       set({ currentPlaylist: response.data.data });
+      console.log(`playlist data`, response.data.data);
     } catch (error) {
       console.error("Error fetching playlist details:", error);
       toast.error("Failed to fetch playlist details");
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  updatePlaylistDetail: async (playlistId, playlistData) => {
+    try {
+
+      console.log(`playlistData----${playlistData.name} playlistDesc ${playlistData.description} ----- playlistId ${playlistId}`, );
+      
+      set({ isLoading: true });
+
+      const response = await axiosInstance.put(
+        `/playlists/${playlistId}/update-playlist-detail`,
+        playlistData
+      );
+
+      // set({ currentPlaylist: response.data.data }); 
+
+      set ((state) => ({
+        playlists: state.playlists.map((playlist) => {
+          if (playlist.id === playlistId) {
+            return response.data.data;
+          }
+          return playlist;
+        }),
+      }))
+      toast.success("Playlist details updated successfully");
+
+    } catch (error) {
+
+      console.error("Error updating playlist:", error);
+      toast.error("Failed to update playlist");
+
+    } finally {
+
+      set({ isLoading: false });
+
     }
   },
 
