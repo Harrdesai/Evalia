@@ -1,6 +1,6 @@
 // src/components/Navbar.jsx
 
-import React from "react";
+import { useEffect, useState } from "react";
 import { User, Code, LogOut, User2 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useAuthStore } from "../store/useAuthStore";
@@ -14,20 +14,64 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-
+import { Button } from "./ui/button";
+import { usePlaylistStore } from "../store/usePlaylistStore";
 const Navbar = () => {
   const { authUser } = useAuthStore();
+  const { playlists, getAllPlaylists, isLoading } = usePlaylistStore();
+  const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [playlistsLoaded, setPlaylistsLoaded] = useState(false);
+
+  useEffect(() => {
+    if (dropdownOpen && !playlistsLoaded && !isLoading) {
+      getAllPlaylists();
+      setPlaylistsLoaded(true);
+    }
+  }, [dropdownOpen, playlistsLoaded, isLoading, getAllPlaylists]);
+
+  const handleDropdownToggle = () => {
+    setDropdownOpen((prev) => !prev);
+  };
 
   return (
     <nav className="sticky top-0 z-50 w-full py-5">
       <div className="flex w-7xl justify-between bg-black/10 shadow-lg shadow-neutral-600/5 backdrop-blur-lg border border-gray-200/10 p-2 pl-8 rounded-full">
         {/* Logo Section */}
-        <Link to="/" className="flex items-center gap-3 cursor-pointer">
-          <span className="text-lg md:text-3xl font-bold tracking-tight text-amber-500 hidden md:block">
-            Evalia
-          </span>
-        </Link>
+        <div>
+          <Link to="/" className="flex items-center gap-3 cursor-pointer">
+            <span className="text-lg md:text-3xl font-bold tracking-tight text-amber-500 hidden md:block">
+              Evalia
+            </span>
+          </Link>
+        </div>
 
+        {authUser ? (
+          <div className="flex items-center gap-3 cursor-pointer">
+            <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+              <DropdownMenuTrigger className="outline-none" asChild>
+                <Button
+                  variant="ghost"
+                  className="text-amber-500"
+                  onClick={handleDropdownToggle} // Toggle dropdown open/close
+                >
+                  Playlists
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                {playlists.map((playlist) => (
+                  <DropdownMenuItem
+                    key={playlist.id}
+                    onClick={() => setSelectedPlaylist(playlist)}
+                  >
+                    {/* bullet point */}
+                    <Link to={`/playlist/${playlist.id}`}> {playlist.name}</Link>
+                  </DropdownMenuItem>
+                ))}
+              </DropdownMenuContent>
+            </DropdownMenu>
+          </div>
+        ) : null}
         {/* User Profile and Dropdown */}
         <div className="flex items-center gap-8">
           <DropdownMenu>
@@ -42,12 +86,13 @@ const Navbar = () => {
             <DropdownMenuContent>
               {authUser ? (
                 <>
-                  <DropdownMenuItem className="w-42">
+                  <DropdownMenuLabel className="w-42">
                     <Link to="/profile" className="flex items-center">
                       <User className="w-6 h-6 mr-2" />
                       {authUser.name}
                     </Link>
-                  </DropdownMenuItem>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
                   {authUser.role === "CLIENT" && (
                     <DropdownMenuItem>
                       <Link to="/add-problem" className="flex items-center">
