@@ -130,13 +130,3 @@ const LoginPage = () => {
 };
 
 export default LoginPage;
-
-// const onSubmit = async (data)=>{
-//   try {
-//     await login(data)
-//     console.log("login data" , data)
-
-//   } catch (error) {
-//     console.error("Login failed" , error)
-//   }
-// }
