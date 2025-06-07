@@ -1,21 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
-import {
-  Play,
-  FileText,
-  MessageSquare,
-  Lightbulb,
-  Bookmark,
-  Share2,
-  Clock,
-  ChevronRight,
-  BookOpen,
-  Terminal,
-  Code2,
-  Users,
-  ThumbsUp,
-  Home,
-} from "lucide-react";
+import { Play, FileText, Lightbulb, Bookmark, Share2, Clock, ChevronRight, BookOpen, Terminal, Code2, Users, ThumbsUp, Home } from "lucide-react";
 import { Link, useParams } from "react-router-dom";
 import { useProblemStore } from "../store/useProblemStore";
 import { getLanguageId } from "../lib/lang";
@@ -24,26 +9,9 @@ import { useSubmissionStore } from "../store/useSubmissionStore";
 import Submission from "../components/Submission";
 import SubmissionsList from "../components/SubmissionList";
 import { create } from "zustand";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 
 const ProblemPage = () => {
   const { id } = useParams();
@@ -63,7 +31,7 @@ const ProblemPage = () => {
   const [isBookmarked, setIsBookmarked] = useState(false);
   const [testcases, setTestCases] = useState([]);
 
-  const { executeCode, submission, isExecuting } = useExecutionStore();
+  const { executeCode, submitSolutionCode, submission, isExecuting } = useExecutionStore();
 
   useEffect(() => {
     getProblemById(id);
@@ -108,6 +76,21 @@ const ProblemPage = () => {
         (tc) => tc.output
       );
       executeCode(code, language_id, stdin, expected_outputs, id);
+    } catch (error) {
+      console.log("Error executing code", error);
+    }
+  };
+
+  const handleSubmitCode = (e) => {
+    e.preventDefault();
+    try {
+      const language_id = getLanguageId(selectedLanguage);
+      const stdin = problem.testcases.createMany?.data?.map((tc) => tc.input);
+      const expected_outputs = problem.testcases.createMany?.data?.map(
+        (tc) => tc.output
+      );
+      submitSolutionCode(code, language_id, stdin, expected_outputs, id);
+      getSubmissionCountForProblem(id);
     } catch (error) {
       console.log("Error executing code", error);
     }
@@ -377,11 +360,11 @@ const ProblemPage = () => {
                   }}
                 />
               </div>
-
+              
               <div className="p-4 border-t border-base-300 bg-base-200">
                 <div className="flex justify-between items-center">
                   <Button
-                    className={`btn btn-primary gap-2 ${
+                    className={`gap-2 ${
                       isExecuting ? "loading" : ""
                     }`}
                     onClick={handleRunCode}
@@ -390,8 +373,14 @@ const ProblemPage = () => {
                     {!isExecuting && <Play className="w-4 h-4" />}
                     Run Code
                   </Button>
-                  <Button className="bg-emerald-600 gap-2">
-                    Submit Solution
+                  <Button className={`bg-emerald-500 text-white gap-2 ${
+                      isExecuting ? "loading" : ""
+                    }`}
+                    onClick={handleSubmitCode}
+                    disabled={isExecuting}
+                  >
+                    {!isExecuting && <Play className="w-4 h-4" />}
+                    Submit
                   </Button>
                 </div>
               </div>

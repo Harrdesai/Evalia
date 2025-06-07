@@ -232,7 +232,7 @@ const submitSolution = async (request, response) => {
     })
 
     response.status(200).json(
-      new ApiResponse(200, submissionWthTestCase, "Code executed successfully")
+      new ApiResponse(200, { results: detailedResults, allPassed }, "Code executed successfully")
     )
 
   } catch (error) {
