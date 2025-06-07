@@ -12,7 +12,6 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -49,18 +48,24 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
     },
   });
 
+  console.log(`playlists------------`, playlists);
   useEffect(() => {
-    console.log("Modal mounted, isOpen:", isOpen);
     if (isOpen) {
       getAllPlaylists();
     }
   }, [isOpen]);
+
+  // TODO: 
+  // const filteredPlaylists = playlists.filter(
+  //   (playlist) => !playlist.problems.some((problem) => problem.id === problemId)
+  // );
 
   const onSubmit = async ({ playlistId }) => {
     if (!playlistId || !problemId) return;
 
     console.log("playlistId", playlistId);
     await addProblemToPlaylist(playlistId, [problemId]);
+    form.reset();
     onClose();
   };
 
@@ -96,7 +101,6 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
                     <SelectContent>
                       {playlists.map(
                         (playlist) => (
-                          console.log("playlist", playlist),
                           (
                             <SelectItem key={playlist.id} value={playlist.id}>
                               {playlist.name}
@@ -112,16 +116,9 @@ const AddToPlaylistModal = ({ isOpen, onClose, problemId }) => {
             />
             <DialogFooter className="flex justify-end gap-2 mt-6">
               <DialogClose asChild>
-                <Button
-                  onClick={onClose}
-                >
-                  Cancel
-                </Button>
+                <Button onClick={onClose}>Cancel</Button>
               </DialogClose>
-              <Button
-                type="submit"
-                disabled={isLoading}
-              >
+              <Button type="submit" disabled={isLoading}>
                 {isLoading ? (
                   <Loader className="w-4 h-4 animate-spin" />
                 ) : (

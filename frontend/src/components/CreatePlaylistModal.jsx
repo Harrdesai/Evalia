@@ -1,67 +1,100 @@
-import React from 'react'
-import {useForm} from "react-hook-form";
-import {X} from "lucide-react";
-const CreatePlaylistModal = ({isOpen , onClose , onSubmit}) => {
-    const {register , handleSubmit , formState:{errors} , reset} = useForm();
 
+import React, { useEffect, useState } from "react";
+import { X, Plus, Loader } from "lucide-react";
+import { usePlaylistStore } from "../store/usePlaylistStore";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+
+const CreatePlaylistModal = ({isOpen , onClose , onSubmit}) => {
+  
+const PlaylistSchema = z.object({
+  name: z.string().min(1, { message: "Playlist name is required" }),
+  description: z.string().min(1, { message: "Playlist description is required" })
+});
+
+  const { createPlaylist , isLoading } = usePlaylistStore();
+
+  const form = useForm({
+    resolver: zodResolver(PlaylistSchema),
+    defaultValues: {
+      name: "",
+      description: "",
+    },
+  })
     const handleFormSubmit = async (data)=>{
-        await onSubmit(data);
-        reset()
+        await createPlaylist(data)
+        form.reset()
         onClose()
     }
 
     if(!isOpen) return null;
 
   return (
-   <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-base-100 rounded-lg shadow-xl w-full max-w-md">
-        <div className="flex justify-between items-center p-4 border-b border-base-300">
-          <h3 className="text-xl font-bold">Create New Playlist</h3>
-          <button onClick={onClose} className="btn btn-ghost btn-sm btn-circle">
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+   <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Create New Playlist</DialogTitle>
+          <DialogDescription />
+        </DialogHeader>
 
-        <form onSubmit={handleSubmit(handleFormSubmit)} className="p-6 space-y-4">
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-medium">Playlist Name</span>
-            </label>
-            <input
-              type="text"
-              className="input input-bordered w-full"
-              placeholder="Enter playlist name"
-              {...register('name', { required: 'Playlist name is required' })}
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(handleFormSubmit)}>
+            <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Playlist Name</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-            {errors.name && (
-              <label className="label">
-                <span className="label-text-alt text-error">{errors.name.message}</span>
-              </label>
-            )}
-          </div>
-
-          <div className="form-control">
-            <label className="label">
-              <span className="label-text font-medium">Description</span>
-            </label>
-            <textarea
-              className="textarea textarea-bordered h-24"
-              placeholder="Enter playlist description"
-              {...register('description')}
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Playlist Description</FormLabel>
+                  <FormControl>
+                    <Input {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
-
-          <div className="flex justify-end gap-2 mt-6">
-            <button type="button" onClick={onClose} className="btn btn-ghost">
-              Cancel
-            </button>
-            <button type="submit" className="btn btn-primary">
-              Create Playlist
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+            <DialogFooter>
+              <Button type="submit">Create</Button>
+              <Button onClick={onClose}>Cancel</Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   )
 }
 

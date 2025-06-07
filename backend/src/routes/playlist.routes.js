@@ -24,7 +24,7 @@ playlistRoutes.post('/:playlistId/add-problem', authMiddleware, addProblemToPlay
 
 playlistRoutes.put('/:id/update-playlist-detail', authMiddleware, updatePlaylist);
 
-playlistRoutes.delete('/delete-problem-from-playlist/:playlistId', authMiddleware, deleteProblemFromPlaylist);
+playlistRoutes.delete('/:playlistId/delete-problem-from-playlist/', authMiddleware, deleteProblemFromPlaylist);
 
 playlistRoutes.delete('/delete-playlist/:playlistId', authMiddleware, deletePlaylist);
 

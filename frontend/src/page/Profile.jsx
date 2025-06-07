@@ -39,6 +39,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import UpdatePlaylistDetailModal from "../components/UpdatePlaylistDetailModal";
+import { Link } from "react-router-dom";
 
 const Profile = ({ userData }) => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -55,6 +56,7 @@ const Profile = ({ userData }) => {
     getAllPlaylists();
   }, []);
 
+  console.log(`playlists from profile`, playlists);
   const handleUpdatePlaylistDetail = (playlistId) => {
     setSelectedPlaylistId(playlistId);
     setIsUpdatePlaylistDetailModalOpen(true);
@@ -147,7 +149,7 @@ const Profile = ({ userData }) => {
         </CardHeader>
         <CardContent>
           <Table>
-            <TableHeader>
+            <TableHeader className="text-xl">
               <TableRow>
                 <TableHead className="text-stone-700 font-semibold">
                   Title
@@ -160,7 +162,14 @@ const Profile = ({ userData }) => {
             <TableBody>
               {playlists.map((playlist) => (
                 <TableRow key={playlist.id}>
-                  <TableCell>{playlist.name}</TableCell>
+                  <TableCell>
+                    <Link
+                      to={`/playlist/${playlist.id}`}
+                      className="hover:text-amber-500"
+                    >
+                      {playlist.name}
+                    </Link>
+                  </TableCell>
                   <TableCell className="text-end">
                     <Button
                       onClick={() => handleUpdatePlaylistDetail(playlist.id)}

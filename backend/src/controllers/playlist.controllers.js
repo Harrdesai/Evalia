@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 const getAllListDetails = async (request, response) => {
 
   try {
-    
+
     const userId = request.user.id
     const playlists = await prisma.playlist.findMany({
       where: {
@@ -25,11 +25,26 @@ const getAllListDetails = async (request, response) => {
     })
 
     response.status(200).json(
-      new ApiResponse(200, playlists, "Playlists fetched successfully")
+      new ApiResponse(200, {
+        playlist: 
+          playlists.map((playlist) => ({
+            id: playlist.id,
+            name: playlist.name,
+            description: playlist.description,
+            problems: 
+              playlist.problems.map((problem) => ({
+                id: problem.problem.id,
+                title: problem.problem.title,
+                description: problem.problem.description,
+                difficulty: problem.problem.difficulty,
+                tags: problem.problem.tags
+              }))
+          }))
+      }, "Playlists fetched successfully")
     )
 
   } catch (error) {
-    
+
     response.status(error.statusCode || 500).json(
       new ApiError(error.statusCode || 500, "Error While fetching playlist", {
         error: error.message
@@ -41,7 +56,7 @@ const getAllListDetails = async (request, response) => {
 
 const getPlaylistDetails = async (request, response) => {
   try {
-    
+
     const playlistId = request.params.id
     const userId = request.user.id
 
@@ -53,7 +68,11 @@ const getPlaylistDetails = async (request, response) => {
       include: {
         problems: {
           include: {
-            problem: true
+            problem: {
+              include: {
+                solvedBy: true
+              }
+            }
           }
         }
       }
@@ -64,11 +83,26 @@ const getPlaylistDetails = async (request, response) => {
     }
 
     response.status(200).json(
-      new ApiResponse(200, playlist, "Playlist details fetched successfully")
+      new ApiResponse(200, {
+        playlist: {
+          id: playlist.id,
+          name: playlist.name,
+          description: playlist.description,
+          problems: 
+            playlist.problems.map((problem) => ({
+              id: problem.problem.id,
+              title: problem.problem.title,
+              description: problem.problem.description,
+              difficulty: problem.problem.difficulty,
+              solvedBy: problem.problem.solvedBy,
+              tags: problem.problem.tags
+            }))
+        }
+      }, "Playlist details fetched successfully")
     )
 
   } catch (error) {
-    
+
     response.status(error.statusCode || 500).json(
       new ApiError(error.statusCode || 500, "Error While fetching playlist details", {
         error: error.message
@@ -115,7 +149,7 @@ const createPlaylist = async (request, response) => {
 const addProblemToPlaylist = async (request, response) => {
 
   try {
-    
+
     const playlistId = request.params.playlistId
     const problemIds = request.body.problemIds
 
@@ -141,7 +175,7 @@ const addProblemToPlaylist = async (request, response) => {
     )
 
   } catch (error) {
-    
+
     response.status(error.statusCode || 500).json(
       new ApiError(error.statusCode || 500, "Error While adding problem to playlist", {
         error: error.message
@@ -177,7 +211,7 @@ const updatePlaylist = async (request, response) => {
     )
 
   } catch (error) {
-    
+
     response.status(error.statusCode || 500).json(
       new ApiError(error.statusCode || 500, "Error While updating playlist", {
         error: error.message
@@ -210,9 +244,9 @@ const deleteProblemFromPlaylist = async (request, response) => {
     response.status(200).json(
       new ApiResponse(200, problemsInPlaylist, "Problem deleted from playlist successfully")
     )
-    
+
   } catch (error) {
-    
+
     response.status(error.statusCode || 500).json(
       new ApiError(error.statusCode || 500, "Failed to delete problem from playlist", {
         error: error.message
@@ -225,7 +259,7 @@ const deleteProblemFromPlaylist = async (request, response) => {
 const deletePlaylist = async (request, response) => {
 
   try {
-    
+
     const playlistId = request.params.playlistId
 
     const deletePlaylist = await prisma.playlist.delete({
@@ -239,7 +273,7 @@ const deletePlaylist = async (request, response) => {
     )
 
   } catch (error) {
-    
+
     response.status(error.statusCode || 500).json(
       new ApiError(error.statusCode || 500, "Failed to delete playlist", {
         error: error.message

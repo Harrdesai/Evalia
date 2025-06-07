@@ -34,7 +34,7 @@ export const usePlaylistStore = create((set, get) => ({
     try {
       set({ isLoading: true });
       const response = await axiosInstance.get("/playlists/get-all-list-details");
-      set({ playlists: response.data.data });
+      set({ playlists: response.data.data.playlist });
     } catch (error) {
       console.error("Error fetching playlists:", error);
       toast.error("Failed to fetch playlists");
@@ -47,8 +47,10 @@ export const usePlaylistStore = create((set, get) => ({
     try {
       set({ isLoading: true });
       const response = await axiosInstance.get(`/playlists/${playlistId}/get-playlist-details`);
-      set({ currentPlaylist: response.data.data });
-      console.log(`playlist data`, response.data.data);
+      set({ currentPlaylist: response.data.data.playlist });
+
+      console.log(`playlist details`, response.data.data);
+      
     } catch (error) {
       console.error("Error fetching playlist details:", error);
       toast.error("Failed to fetch playlist details");
@@ -60,16 +62,12 @@ export const usePlaylistStore = create((set, get) => ({
   updatePlaylistDetail: async (playlistId, playlistData) => {
     try {
 
-      console.log(`playlistData----${playlistData.name} playlistDesc ${playlistData.description} ----- playlistId ${playlistId}`, );
-      
       set({ isLoading: true });
 
       const response = await axiosInstance.put(
         `/playlists/${playlistId}/update-playlist-detail`,
         playlistData
       );
-
-      // set({ currentPlaylist: response.data.data }); 
 
       set ((state) => ({
         playlists: state.playlists.map((playlist) => {
@@ -115,10 +113,11 @@ export const usePlaylistStore = create((set, get) => ({
   },
 
   removeProblemFromPlaylist: async (playlistId, problemIds) => {
+    console.log(`playlistId ${playlistId} and problemIds ${problemIds}`);
     try {
       set({ isLoading: true });
-      await axiosInstance.post(`/playlists/${playlistId}/remove-problems`, {
-        problemIds,
+      await axiosInstance.delete(`/playlists/${playlistId}/delete-problem-from-playlist`, {
+      data: { problemIds }  
       });
 
       toast.success("Problem removed from playlist");

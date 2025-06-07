@@ -172,15 +172,7 @@ const getMe = async (request, response) => {
             problem: true
           }
         },
-        playlists: {
-          include: {
-            problems: {
-              include: {
-                problem: true
-              }
-            }
-          }
-        }
+        playlists: true
       }
     })
 
