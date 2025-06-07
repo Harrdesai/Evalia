@@ -25,16 +25,6 @@ import {
 import { Checkbox } from "@/components/ui/checkbox";
 import AddToPlaylistModal from "./AddToPlaylist";
 import CreatePlaylistModal from "./CreatePlaylistModal";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 const ProblemsTable = ({ problems }) => {
   const { authUser } = useAuthStore();

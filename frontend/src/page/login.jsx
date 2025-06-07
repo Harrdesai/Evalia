@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
 import { Code, Eye, EyeOff, Loader2, Lock, Mail } from "lucide-react";
 
-import AuthImagePattern from "../components/AuthImagePattern";
 import { useAuthStore } from "../store/useAuthStore";
 
 const LoginSchema = z.object({
@@ -70,7 +69,7 @@ const LoginPage = () => {
             render={({ field }) => (
               <FormItem>
                 <FormControl>
-                  <Input placeholder="Email" {...field} />
+                  <Input placeholder="Email" autoComplete="off" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -88,6 +87,7 @@ const LoginPage = () => {
                       type={showPassword ? "text" : "password"}
                       className="pr-10"
                       placeholder="Password"
+                      autoComplete="off"
                     />
                   </FormControl>
                   <Button

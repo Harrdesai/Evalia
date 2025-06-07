@@ -52,7 +52,7 @@ const PlaylistSchema = z.object({
 
   return (
    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent>
         <DialogHeader>
           <DialogTitle>Create New Playlist</DialogTitle>
           <DialogDescription />
@@ -60,7 +60,6 @@ const PlaylistSchema = z.object({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleFormSubmit)}>
-            <pre>{JSON.stringify(form.formState.errors, null, 2)}</pre>
             <FormField
               control={form.control}
               name="name"
