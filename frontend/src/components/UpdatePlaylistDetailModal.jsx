@@ -1,29 +1,14 @@
 // src/components/UpdatePlaylistDetailModal.jsx
 
-import React, { useEffect, useState } from "react";
-import { X, Plus, Loader } from "lucide-react";
+import { useEffect } from "react";
+import { Loader } from "lucide-react";
 import { usePlaylistStore } from "../store/usePlaylistStore";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogClose, DialogFooter } from "@/components/ui/dialog";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 
@@ -33,7 +18,7 @@ const PlaylistSchema = z.object({
 });
 
 const UpdatePlaylistDetailModal = ({ isOpen, onClose, playlistId}) => {
-  const { updatePlaylistDetail, currentPlaylist, getPlaylistDetails, getAllPlaylists, playlists, isLoading } = usePlaylistStore();
+  const { updatePlaylistDetail, currentPlaylist, getPlaylistDetails, isLoading } = usePlaylistStore();
 
   
   useEffect(() => {

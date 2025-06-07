@@ -6,8 +6,10 @@ import { useAuthStore } from "../store/useAuthStore";
 const LogoutButton = ({ children }) => {
   const { logout } = useAuthStore();
 
+  // on logout navigate to login
   const onLogout = async () => {
     await logout();
+    window.location.href = "/login";
   };
 
   return (

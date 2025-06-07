@@ -8,12 +8,12 @@ import HomePage from "./page/HomePage";
 import RegisterPage from "./page/register";
 import LoginPage from "./page/login";
 import { useAuthStore } from "./store/useAuthStore";
-import Layout from "./layout/layout";
 import AdminRoute from "./components/AdminRoute";
 import ProblemPage from "./page/ProblemPage";
 import AddProblem from "./page/AddProblem";
 import Profile from "./page/Profile";
 import Playlist from "./page/Playlist";
+import Navbar from "./components/Navbar";
 
 function App() {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
@@ -33,13 +33,14 @@ function App() {
   return (
     <div className="flex flex-col items-center justify-start bg-stone-50">
       <Toaster />
+      <div>
+      <Navbar />
+      </div>
       <Routes>
-        <Route path="/" element={<Layout />}>
-          <Route
-            index
-            element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
-          />
-        </Route>
+        <Route
+          index
+          element={authUser ? <HomePage /> : <Navigate to={"/login"} />}
+        />
         <Route
           path="/register"
           element={!authUser ? <RegisterPage /> : <Navigate to="/" />}
@@ -60,9 +61,9 @@ function App() {
         />
 
         <Route
-        path="/playlist/:playlistId"
-        element={authUser ? <Playlist /> : <Navigate to={"/login"} />}
-      />
+          path="/playlist/:playlistId"
+          element={authUser ? <Playlist /> : <Navigate to={"/login"} />}
+        />
 
         <Route element={<AdminRoute />}>
           <Route
