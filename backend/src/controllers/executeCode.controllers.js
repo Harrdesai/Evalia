@@ -76,7 +76,11 @@ const executeCode = async (request, response) => {
     console.log(`Detailed Results:------------`, detailedResults);
 
     if (!allPassed) {
-      throw new ApiError(400, "Test cases failed");
+
+      return response.status(400).json(
+        
+        new ApiResponse(400, { results: detailedResults, allPassed }, "Test cases failed")
+      )
     }
 
     response.status(200).json(
@@ -165,10 +169,16 @@ const submitSolution = async (request, response) => {
 
     console.log(`Detailed Results:------------`, detailedResults);
 
+
     if (!allPassed) {
-      throw new ApiError(400, "Test cases failed");
+
+      return response.status(400).json(
+        
+        new ApiResponse(400, { results: detailedResults, allPassed }, "Test cases failed")
+      )
     }
 
+    // create submission
     const submission = await prisma.submission.create({
       data: {
         userId,

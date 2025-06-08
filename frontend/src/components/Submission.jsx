@@ -1,27 +1,13 @@
 // src/components/Submission.jsx
 
-import React from "react";
-import {
-  CheckCircle2,
-  XCircle,
-  Clock,
-  MemoryStick as Memory,
-} from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
+import { CheckCircle2, XCircle, Clock, MemoryStick as Memory } from "lucide-react";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+
 const SubmissionResults = ({ submission }) => {
   console.log(`submission in submission.js file`, submission);
 
   // Parse stringified arrays
-const memoryArr = submission.results.map(tc =>
+const memoryArr = submission.results.map(tc =>  
   parseFloat(tc.memory?.replace(/[^\d.]/g, "") || "0")
 );
 
@@ -53,7 +39,7 @@ const timeArr = submission.results.map(tc =>
             <h3 className="card-title text-sm">Status</h3>
             <div
               className={`text-lg font-bold ${
-                submission.allPassed ? "text-success" : "text-error"
+                submission.allPassed ? "text-emerald-600" : "text-rose-600"
               }`}
             >
               {submission.allPassed ? "Accepted" : "Rejected"}
@@ -107,15 +93,16 @@ const timeArr = submission.results.map(tc =>
                 </TableHeader>
                 <TableBody>
                   {submission.results.map((testCase) => (
-                    <TableRow key={testCase.id}>
+                    <TableRow key={testCase.testCase}>
+                      {console.log(`TestcaseID ------${testCase.id}`)}
                       <TableCell>
                         {testCase.passed ? (
-                          <div className="flex items-center justify-center gap-2 text-success">
+                          <div className="flex items-center justify-center gap-2 text-emerald-600">
                             <CheckCircle2 className="w-5 h-5" />
                             Passed
                           </div>
                         ) : (
-                          <div className="flex items-center gap-2 text-error">
+                          <div className="flex items-center gap-2 text-rose-700">
                             <XCircle className="w-5 h-5" />
                             Failed
                           </div>

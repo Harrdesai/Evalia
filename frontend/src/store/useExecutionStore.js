@@ -27,6 +27,7 @@ export const useExecutionStore = create((set) => ({
     } catch (error) {
       console.log("Error executing code", error);
       toast.error("Error executing code");
+      set({ submission: error.response.data.data });
     }
     finally {
       set({ isExecuting: false });
@@ -52,6 +53,7 @@ export const useExecutionStore = create((set) => ({
     } catch (error) {
       console.log("Error executing code", error);
       toast.error("Error executing code");
+      set({ submission: error.response.data.data });
     }
     finally {
       set({ isExecuting: false });

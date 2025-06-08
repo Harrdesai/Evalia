@@ -59,7 +59,6 @@ const ProblemPage = () => {
     }
   }, [activeTab, id]);
 
-  console.log("submission------------", submissions);
   const handleLanguageChange = (e) => {
     const lang = e.target.value;
     setSelectedLanguage(lang);
@@ -68,6 +67,7 @@ const ProblemPage = () => {
 
   const handleRunCode = (e) => {
     e.preventDefault();
+    
     try {
       const language_id = getLanguageId(selectedLanguage);
       const stdin = problem.testcases.createMany?.data?.map((tc) => tc.input);
