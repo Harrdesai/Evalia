@@ -7,7 +7,8 @@ dotenv.config({
 const getJudge0LanguageId = (language) => {
   const languageMap = {
     "PYTHON": 71,
-    "JAVASCRIPT": 63
+    "JAVASCRIPT": 63,
+    "JAVA": 62
   }
 
   return languageMap[language.toUpperCase()]
@@ -48,7 +49,8 @@ const pollBatchResults = async(tokens) => {
 const getLanguageName = (languageId) => {
   const languageNames = {
     71: "PYTHON",
-    63: "JAVASCRIPT"
+    63: "JAVASCRIPT",
+    62: "JAVA",
   }
 
   return languageNames[languageId]

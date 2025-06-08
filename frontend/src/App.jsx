@@ -15,7 +15,7 @@ import Profile from "./page/Profile";
 import Playlist from "./page/Playlist";
 import Navbar from "./components/Navbar";
 
-function App() {
+const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
 
   useEffect(() => {
@@ -76,4 +76,4 @@ function App() {
   );
 }
 
-export default App;
+export default App

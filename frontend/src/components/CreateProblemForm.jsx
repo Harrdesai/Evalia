@@ -39,21 +39,21 @@ const problemSchema = z.object({
       output: z.string().min(1, "Output is required"),
       explanation: z.string().optional(),
     }),
-    // JAVA: z.object({
-    //   input: z.string().min(1, "Input is required"),
-    //   output: z.string().min(1, "Output is required"),
-    //   explanation: z.string().optional(),
-    // }),
+    JAVA: z.object({
+      input: z.string().min(1, "Input is required"),
+      output: z.string().min(1, "Output is required"),
+      explanation: z.string().optional(),
+    }),
   }),
   codeSnippets: z.object({
     JAVASCRIPT: z.string().min(1, "JavaScript code snippet is required"),
     PYTHON: z.string().min(1, "Python code snippet is required"),
-    // JAVA: z.string().min(1, "Java solution is required"),
+    JAVA: z.string().min(1, "Java solution is required"),
   }),
   referenceSolutions: z.object({
     JAVASCRIPT: z.string().min(1, "JavaScript solution is required"),
     PYTHON: z.string().min(1, "Python solution is required"),
-    // JAVA: z.string().min(1, "Java solution is required"),
+    JAVA: z.string().min(1, "Java solution is required"),
   }),
   constraints: z.string().min(1, "Constraints are required"),
   hints: z.string().optional(),
@@ -99,12 +99,12 @@ const sampledpData = {
       explanation:
         "There are three ways to climb to the top:\n1. 1 step + 1 step + 1 step\n2. 1 step + 2 steps\n3. 2 steps + 1 step",
     },
-    // JAVA: {
-    //   input: "n = 4",
-    //   output: "5",
-    //   explanation:
-    //     "There are five ways to climb to the top:\n1. 1 step + 1 step + 1 step + 1 step\n2. 1 step + 1 step + 2 steps\n3. 1 step + 2 steps + 1 step\n4. 2 steps + 1 step + 1 step\n5. 2 steps + 2 steps",
-    // },
+    JAVA: {
+      input: "n = 4",
+      output: "5",
+      explanation:
+        "There are five ways to climb to the top:\n1. 1 step + 1 step + 1 step + 1 step\n2. 1 step + 1 step + 2 steps\n3. 1 step + 2 steps + 1 step\n4. 2 steps + 1 step + 1 step\n5. 2 steps + 2 steps",
+    },
   },
   codeSnippets: {
     JAVASCRIPT: `/**
@@ -148,26 +148,26 @@ if __name__ == "__main__":
   
   # Print result
   print(result)`,
-    //     JAVA: `import java.util.Scanner;
+        JAVA: `import java.util.Scanner;
 
-    // class Main {
-    //   public int climbStairs(int n) {
-    //       // Write your code here
-    //       return 0;
-    //   }
+    class Main {
+      public int climbStairs(int n) {
+          // Write your code here
+          return 0;
+      }
 
-    //   public static void main(String[] args) {
-    //       Scanner scanner = new Scanner(System.in);
-    //       int n = Integer.parseInt(scanner.nextLine().trim());
+      public static void main(String[] args) {
+          Scanner scanner = new Scanner(System.in);
+          int n = Integer.parseInt(scanner.nextLine().trim());
 
-    //       // Use Main class instead of Solution
-    //       Main main = new Main();
-    //       int result = main.climbStairs(n);
+          // Use Main class instead of Solution
+          Main main = new Main();
+          int result = main.climbStairs(n);
 
-    //       System.out.println(result);
-    //       scanner.close();
-    //   }
-    // }`,
+          System.out.println(result);
+          scanner.close();
+      }
+    }`,
   },
   referenceSolutions: {
     JAVASCRIPT: `/**
@@ -257,52 +257,52 @@ if __name__ == "__main__":
   
   # Print result
   print(result)`,
-    //     JAVA: `import java.util.Scanner;
+        JAVA: `import java.util.Scanner;
 
-    // class Main {
-    //   public int climbStairs(int n) {
-    //       // Base cases
-    //       if (n <= 2) {
-    //           return n;
-    //       }
+    class Main {
+      public int climbStairs(int n) {
+          // Base cases
+          if (n <= 2) {
+              return n;
+          }
 
-    //       // Dynamic programming approach
-    //       int[] dp = new int[n + 1];
-    //       dp[1] = 1;
-    //       dp[2] = 2;
+          // Dynamic programming approach
+          int[] dp = new int[n + 1];
+          dp[1] = 1;
+          dp[2] = 2;
 
-    //       for (int i = 3; i <= n; i++) {
-    //           dp[i] = dp[i - 1] + dp[i - 2];
-    //       }
+          for (int i = 3; i <= n; i++) {
+              dp[i] = dp[i - 1] + dp[i - 2];
+          }
 
-    //       return dp[n];
+          return dp[n];
 
-    //       /* Alternative approach with O(1) space
-    //       int a = 1; // ways to climb 1 step
-    //       int b = 2; // ways to climb 2 steps
+          /* Alternative approach with O(1) space
+          int a = 1; // ways to climb 1 step
+          int b = 2; // ways to climb 2 steps
 
-    //       for (int i = 3; i <= n; i++) {
-    //           int temp = a + b;
-    //           a = b;
-    //           b = temp;
-    //       }
+          for (int i = 3; i <= n; i++) {
+              int temp = a + b;
+              a = b;
+              b = temp;
+          }
 
-    //       return n == 1 ? a : b;
-    //       */
-    //   }
+          return n == 1 ? a : b;
+          */
+      }
 
-    //   public static void main(String[] args) {
-    //       Scanner scanner = new Scanner(System.in);
-    //       int n = Integer.parseInt(scanner.nextLine().trim());
+      public static void main(String[] args) {
+          Scanner scanner = new Scanner(System.in);
+          int n = Integer.parseInt(scanner.nextLine().trim());
 
-    //       // Use Main class instead of Solution
-    //       Main main = new Main();
-    //       int result = main.climbStairs(n);
+          // Use Main class instead of Solution
+          Main main = new Main();
+          int result = main.climbStairs(n);
 
-    //       System.out.println(result);
-    //       scanner.close();
-    //   }
-    // }`,
+          System.out.println(result);
+          scanner.close();
+      }
+    }`,
   },
 };
 
@@ -344,11 +344,11 @@ const sampleStringProblem = {
       output: "true",
       explanation: '"amanaplanacanalpanama" is a palindrome.',
     },
-    // JAVA: {
-    //   input: 's = "A man, a plan, a canal: Panama"',
-    //   output: "true",
-    //   explanation: '"amanaplanacanalpanama" is a palindrome.',
-    // },
+    JAVA: {
+      input: 's = "A man, a plan, a canal: Panama"',
+      output: "true",
+      explanation: '"amanaplanacanalpanama" is a palindrome.',
+    },
   },
   codeSnippets: {
     JAVASCRIPT: `/**
@@ -393,26 +393,26 @@ const sampleStringProblem = {
       
       # Output result
       print(str(result).lower())  # Convert True/False to lowercase true/false`,
-    //     JAVA: `import java.util.Scanner;
+        JAVA: `import java.util.Scanner;
 
-    // public class Main {
-    //     public static String preprocess(String s) {
-    //         return s.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-    //     }
+    public class Main {
+        public static String preprocess(String s) {
+            return s.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        }
 
-    //     public static boolean isPalindrome(String s) {
+        public static boolean isPalindrome(String s) {
 
-    //     }
+        }
 
-    //     public static void main(String[] args) {
-    //         Scanner sc = new Scanner(System.in);
-    //         String input = sc.nextLine();
+        public static void main(String[] args) {
+            Scanner sc = new Scanner(System.in);
+            String input = sc.nextLine();
 
-    //         boolean result = isPalindrome(input);
-    //         System.out.println(result ? "true" : "false");
-    //     }
-    // }
-    // `,
+            boolean result = isPalindrome(input);
+            System.out.println(result ? "true" : "false");
+        }
+    }
+    `,
   },
   referenceSolutions: {
     JAVASCRIPT: `/**
@@ -475,35 +475,35 @@ const sampleStringProblem = {
       
       # Output result
       print(str(result).lower())  # Convert True/False to lowercase true/false`,
-    //     JAVA: `import java.util.Scanner;
+        JAVA: `import java.util.Scanner;
 
-    // public class Main {
-    //     public static String preprocess(String s) {
-    //         return s.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
-    //     }
+    public class Main {
+        public static String preprocess(String s) {
+            return s.replaceAll("[^a-zA-Z0-9]", "").toLowerCase();
+        }
 
-    //     public static boolean isPalindrome(String s) {
-    //         s = preprocess(s);
-    //         int left = 0, right = s.length() - 1;
+        public static boolean isPalindrome(String s) {
+            s = preprocess(s);
+            int left = 0, right = s.length() - 1;
 
-    //         while (left < right) {
-    //             if (s.charAt(left) != s.charAt(right)) return false;
-    //             left++;
-    //             right--;
-    //         }
+            while (left < right) {
+                if (s.charAt(left) != s.charAt(right)) return false;
+                left++;
+                right--;
+            }
 
-    //         return true;
-    //     }
+            return true;
+        }
 
-    //     public static void main(String[] args) {
-    //         Scanner sc = new Scanner(System.in);
-    //         String input = sc.nextLine();
+        public static void main(String[] args) {
+            Scanner sc = new Scanner(System.in);
+            String input = sc.nextLine();
 
-    //         boolean result = isPalindrome(input);
-    //         System.out.println(result ? "true" : "false");
-    //     }
-    // }
-    // `,
+            boolean result = isPalindrome(input);
+            System.out.println(result ? "true" : "false");
+        }
+    }
+    `,
   },
 };
 
@@ -525,18 +525,18 @@ const CreateProblemForm = () => {
       examples: {
         JAVASCRIPT: { input: "", output: "", explanation: "" },
         PYTHON: { input: "", output: "", explanation: "" },
-        // JAVA: { input: "", output: "", explanation: "" },
+        JAVA: { input: "", output: "", explanation: "" },
       },
       // referenceSolutions
       codeSnippets: {
         JAVASCRIPT: "function solution() {\n  // Write your code here\n}",
         PYTHON: "def solution():\n    # Write your code here\n    pass",
-        // JAVA: "public class Solution {\n    public static void main(String[] args) {\n        // Write your code here\n    }\n}",
+        JAVA: "public class Solution {\n    public static void main(String[] args) {\n        // Write your code here\n    }\n}",
       },
       referenceSolutions: {
         JAVASCRIPT: "// Add your reference solution here",
         PYTHON: "# Add your reference solution here",
-        // JAVA: "// Add your reference solution here",
+        JAVA: "// Add your reference solution here",
       },
     },
   });
