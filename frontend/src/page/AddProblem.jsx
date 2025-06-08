@@ -1,8 +1,12 @@
-import React from 'react'
+// src/page/AddProblem.jsx
+
+import CreateProblemForm from '../components/CreateProblemForm'
 
 const AddProblem = () => {
   return (
-    <div>AddProblem</div>
+    <div>
+      <CreateProblemForm/>
+    </div>
   )
 }
 

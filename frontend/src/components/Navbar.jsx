@@ -1,21 +1,17 @@
 // src/components/Navbar.jsx
 
 import { useEffect, useState } from "react";
-import { User, Code, LogOut, User2 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { useAuthStore } from "../store/useAuthStore";
 import { Link } from "react-router-dom";
-import LogoutButton from "./LogoutButton";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Button } from "./ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { User, Code, LogOut, User2 } from "lucide-react";
+
+import LogoutButton from "./LogoutButton";
+import { useAuthStore } from "../store/useAuthStore";
 import { usePlaylistStore } from "../store/usePlaylistStore";
+
 const Navbar = () => {
   const { authUser } = useAuthStore();
   const { playlists, getAllPlaylists, isLoading } = usePlaylistStore();
@@ -40,9 +36,16 @@ const Navbar = () => {
         {/* Logo Section */}
         <div>
           <Link to="/" className="flex items-center gap-3 cursor-pointer">
-            <span className="text-lg md:text-3xl font-bold tracking-tight text-amber-500 hidden md:block">
-              Evalia
-            </span>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="text-lg md:text-3xl font-bold tracking-tight text-amber-500 hidden md:block">
+                  Evalia
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Home</p>
+              </TooltipContent>
+            </Tooltip>
           </Link>
         </div>
 
@@ -94,7 +97,7 @@ const Navbar = () => {
                   </DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   {authUser.role === "CLIENT" && (
-                    <DropdownMenuItem>
+                    <DropdownMenuItem asChild>
                       <Link to="/add-problem" className="flex items-center">
                         <Code className="w-6 h-6 mr-2" />
                         Add Problem

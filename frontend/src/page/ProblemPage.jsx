@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
-import { Play, FileText, Lightbulb, Bookmark, Share2, Clock, ChevronRight, BookOpen, Terminal, Code2, Users, ThumbsUp, Home } from "lucide-react";
-import { Link, useParams } from "react-router-dom";
+import { Play, FileText, Lightbulb, Bookmark, Share2, Clock, ChevronRight, BookOpen, Terminal, Code2, Users, ThumbsUp } from "lucide-react";
+import { useParams } from "react-router-dom";
 import { useProblemStore } from "../store/useProblemStore";
 import { getLanguageId } from "../lib/lang";
 import { useExecutionStore } from "../store/useExecutionStore";
 import { useSubmissionStore } from "../store/useSubmissionStore";
 import Submission from "../components/Submission";
 import SubmissionsList from "../components/SubmissionList";
-import { create } from "zustand";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -116,12 +115,12 @@ const ProblemPage = () => {
 
             {problem.examples && (
               <>
-                <h3 className="text-xl font-bold pl-4 mb-4">Examples:</h3>
+                <h3 className="text-xl text-amber-500 font-bold pl-4">Examples:</h3>
                 {Object.entries(problem.examples).map(
                   ([lang, example], idx) => (
                     <div
                       key={lang}
-                      className="bg-base-200 p-6 rounded-xl mb-6 font-mono"
+                      className="bg-base-200 p-6 rounded-xl font-mono"
                     >
                       <div className="mb-4">
                         <div className="text-stone-700 mb-2 text-base font-semibold">
@@ -141,12 +140,12 @@ const ProblemPage = () => {
                       </div>
                       {example.explanation && (
                         <div>
-                          <div className="text-amber-500 mb-2 text-base font-semibold">
+                          <div className="text-stone-700 mb-2 text-base font-semibold">
                             Explanation:
                           </div>
-                          <p className="text-stone-700 text-lg font-semibold">
+                          <span className="text-stone-700 bg-black/20 px-4 py-1 rounded-full text-lg">
                             {example.explanation}
-                          </p>
+                          </span>
                         </div>
                       )}
                     </div>
@@ -157,9 +156,9 @@ const ProblemPage = () => {
 
             {problem.constraints && (
               <>
-                <h3 className="text-xl pl-4 font-bold mb-4">Constraints:</h3>
-                <div className="bg-base-200 p-6 rounded-xl mb-6">
-                  <span className="bg-black/20 px-4 rounded-full font-semibold text-stone-700">
+                <h3 className="text-xl text-amber-500 pl-4 font-bold">Constraints:</h3>
+                <div className="bg-base-200 p-6 rounded-xl">
+                  <span className="bg-black/20 px-4 py-1 rounded-full font-semibold text-stone-700">
                     {problem.constraints}
                   </span>
                 </div>
@@ -213,12 +212,8 @@ const ProblemPage = () => {
 
   return (
     <div className="min-h-screen flex flex-col w-4/5">
-      <nav className="shadow-lg px-4 flex">
+      <nav className="shadow-lg px-4 flex rounded-3xl items-center justify-between p-2">
         <div className="flex flex-1/2 flex-col mb-2">
-          <Link to={"/"} className="flex items-center mt-2 gap-2 text-primary">
-            <Home className="w-6 h-6" />
-            <ChevronRight className="w-6 h-6" />
-          </Link>
           <div className="mt-2">
             <h1 className="text-xl font-bold">{problem.title}</h1>
             <div className="flex items-center gap-2 text-sm text-base-content/70 mt-5">
@@ -241,17 +236,20 @@ const ProblemPage = () => {
           </div>
         </div>
         <div className="flex flex-1/2 justify-end gap-4 items-center">
-          <button
-            className={`btn btn-ghost btn-circle ${
+          {/* <Button
+          variant="ghost"
+            className={` ${
               isBookmarked ? "text-primary" : ""
             }`}
             onClick={() => setIsBookmarked(!isBookmarked)}
           >
             <Bookmark className="w-5 h-5" />
-          </button>
-          <button className="btn btn-ghost btn-circle">
+          </Button>
+          <Button
+            variant="ghost"
+          >
             <Share2 className="w-5 h-5" />
-          </button>
+          </Button> */}
           <div className="flex">
             <Select
               onValueChange={setSelectedLanguage}
@@ -275,7 +273,7 @@ const ProblemPage = () => {
       </nav>
 
       <div className="container mx-auto p-4">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
           <div className="shadow-xl rounded-3xl">
             <div className="card-body p-0">
               <div className="tabs tabs-bordered">
@@ -373,7 +371,7 @@ const ProblemPage = () => {
                     {!isExecuting && <Play className="w-4 h-4" />}
                     Run Code
                   </Button>
-                  <Button className={`bg-emerald-500 text-white gap-2 ${
+                  <Button className={`bg-emerald-500 hover:bg-emerald-600 text-white gap-2 ${
                       isExecuting ? "loading" : ""
                     }`}
                     onClick={handleSubmitCode}
@@ -388,7 +386,7 @@ const ProblemPage = () => {
           </div>
         </div>
 
-        <div className="card bg-base-100 shadow-xl mt-6">
+        <div className="card bg-base-100 shadow-xl mt-6 rounded-3xl">
           <div className="card-body">
             {submission ? (
               <Submission submission={submission} />
